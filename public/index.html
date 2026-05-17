@@ -690,6 +690,60 @@
     .stat-box .big .col { color: var(--accent); }
     .stat-box .lbl { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 6px; }
 
+    /* ─── PRICE TABLE ─── */
+    .price-section-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .price-section-title i { color: var(--primary); }
+    .price-table {
+      background: #fff;
+      border: 1.5px solid #E8EEFF;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .price-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 24px;
+      border-bottom: 1px solid #F0F3FF;
+      transition: background 0.2s;
+    }
+    .price-row:last-child { border-bottom: none; }
+    .price-row:hover { background: #F7F9FF; }
+    .price-name {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .price-sub {
+      font-size: 11px;
+      color: var(--text-light);
+      background: #EEF1FA;
+      padding: 2px 8px;
+      border-radius: 50px;
+      font-weight: 400;
+    }
+    .price-val {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .price-consult {
+      color: var(--text-sub);
+      font-weight: 600;
+    }
+    .price-note-row { background: #FAFBFF; }
+
     /* ─── REVIEWS ─── */
     #reviews { background: #F7F9FF; }
     .reviews-grid {
@@ -987,7 +1041,7 @@
         <a href="#contact">문의</a>
       </nav>
       <div class="header-cta">
-        <a href="tel:010-0000-0000" class="btn-call">
+        <a href="tel:010-6671-3280" class="btn-call">
           <i class="fas fa-phone"></i>
           <span class="hide-sm">지금 전화하기</span>
         </a>
@@ -1028,7 +1082,7 @@
           합리적인 가격으로 완벽하게 처리해드립니다.
         </p>
         <div class="hero-actions">
-          <a href="tel:010-0000-0000" class="btn-primary">
+          <a href="tel:010-6671-3280" class="btn-primary">
             <i class="fas fa-phone"></i> 지금 바로 전화
           </a>
           <a href="#contact" class="btn-outline">
@@ -1061,20 +1115,20 @@
           </div>
           <div class="service-list-mini">
             <div class="service-item-mini">
-              <span class="name">🧊 가스 충전 (R-410A)</span>
-              <span class="price">4만원~</span>
+              <span class="name">🧊 벽걸이 가스충전</span>
+              <span class="price">100,000원</span>
             </div>
             <div class="service-item-mini">
-              <span class="name">🔧 에어컨 수리</span>
-              <span class="price">출장 기본 2만원~</span>
+              <span class="name">🧊 스탠드 가스충전</span>
+              <span class="price">120,000원</span>
             </div>
             <div class="service-item-mini">
-              <span class="name">🔍 점검 · 유지보수</span>
-              <span class="price">3만원~</span>
+              <span class="name">🔧 누설수리 (벽걸이)</span>
+              <span class="price">350,000원</span>
             </div>
             <div class="service-item-mini">
-              <span class="name">🏢 상업용 에어컨</span>
-              <span class="price">별도 문의</span>
+              <span class="name">🏢 멀티시스템</span>
+              <span class="price">별도 협의</span>
             </div>
           </div>
           <a href="#contact" class="card-cta">무료 견적 문의하기 →</a>
@@ -1107,7 +1161,7 @@
           <div class="svc-icon"><i class="fas fa-tint"></i></div>
           <h3 class="svc-title">냉매 가스 충전</h3>
           <p class="svc-desc">냉방 효율이 떨어지거나 바람은 나오는데 차갑지 않을 때, 냉매 누설 점검 및 가스 충전 서비스를 제공합니다.</p>
-          <span class="svc-price"><i class="fas fa-won-sign"></i> 40,000원~</span>
+          <span class="svc-price"><i class="fas fa-won-sign"></i> 100,000원~</span>
           <div class="svc-tags">
             <span class="svc-tag">R-22</span>
             <span class="svc-tag">R-410A</span>
@@ -1119,7 +1173,7 @@
           <div class="svc-icon"><i class="fas fa-tools"></i></div>
           <h3 class="svc-title">에어컨 수리</h3>
           <p class="svc-desc">작동 불량, 소음, 누수, 에러코드 등 모든 에어컨 고장 증상을 현장 진단 후 즉시 수리합니다.</p>
-          <span class="svc-price"><i class="fas fa-won-sign"></i> 출장 20,000원~</span>
+          <span class="svc-price"><i class="fas fa-won-sign"></i> 출장비 수준~</span>
           <div class="svc-tags">
             <span class="svc-tag">현장 진단</span>
             <span class="svc-tag">부품 교체</span>
@@ -1202,56 +1256,94 @@
       <div class="section-head">
         <div class="section-label"><i class="fas fa-tag"></i> 요금 안내</div>
         <h2 class="section-title">투명하고 합리적인<br>서비스 요금</h2>
-        <p class="section-desc">숨겨진 비용 없이 미리 안내해드립니다. 현장 진단 후 최종 견적을 확정합니다.</p>
+        <p class="section-desc">현장 상황에 따라 달라질 수 있으며, 방문 후 정확한 견적을 안내드립니다.</p>
       </div>
-      <div class="pricing-grid">
-        <div class="pricing-card">
-          <div class="pricing-icon"><i class="fas fa-tint"></i></div>
-          <div class="pricing-name">냉매 가스 충전</div>
-          <div class="pricing-price">4<span>만원~</span></div>
-          <div class="pricing-note">가스 종류 및 충전량에 따라 변동</div>
-          <div class="pricing-divider"></div>
-          <ul class="pricing-features">
-            <li><i class="fas fa-check"></i> 냉매 누설 점검 포함</li>
-            <li><i class="fas fa-check"></i> R-22 / R-410A / R-32 대응</li>
-            <li><i class="fas fa-check"></i> 충전 후 정상 작동 확인</li>
-            <li><i class="fas fa-check"></i> 30일 AS 보장</li>
-          </ul>
-          <a href="#contact" class="pricing-btn pricing-btn-outline">문의하기</a>
+
+      <!-- 가스 충전 -->
+      <div class="price-section-title"><i class="fas fa-tint"></i> 가스 충전 요금</div>
+      <div class="price-table">
+        <div class="price-row">
+          <span class="price-name">벽걸이형 <span class="price-sub">5m 기준</span></span>
+          <span class="price-val">100,000원</span>
         </div>
-        <div class="pricing-card popular">
-          <div class="popular-badge">⭐ 가장 많이 찾는 서비스</div>
-          <div class="pricing-icon"><i class="fas fa-tools"></i></div>
-          <div class="pricing-name">에어컨 수리</div>
-          <div class="pricing-price">2<span>만원~</span></div>
-          <div class="pricing-note">출장비 기본 · 수리비 별도 견적</div>
-          <div class="pricing-divider"></div>
-          <ul class="pricing-features">
-            <li><i class="fas fa-check"></i> 현장 무상 진단</li>
-            <li><i class="fas fa-check"></i> 전 브랜드 대응 (삼성·LG·캐리어 등)</li>
-            <li><i class="fas fa-check"></i> 당일 수리 완료 (대부분 가능)</li>
-            <li><i class="fas fa-check"></i> 부품 실비 청구 (정품 사용)</li>
-            <li><i class="fas fa-check"></i> 30일 AS 무상 보장</li>
-          </ul>
-          <a href="#contact" class="pricing-btn pricing-btn-fill">지금 바로 문의</a>
+        <div class="price-row">
+          <span class="price-name">스탠드형</span>
+          <span class="price-val">120,000원</span>
         </div>
-        <div class="pricing-card">
-          <div class="pricing-icon"><i class="fas fa-search"></i></div>
-          <div class="pricing-name">점검 · 유지보수</div>
-          <div class="pricing-price">3<span>만원~</span></div>
-          <div class="pricing-note">점검 항목 및 부품 교체 시 변동</div>
-          <div class="pricing-divider"></div>
-          <ul class="pricing-features">
-            <li><i class="fas fa-check"></i> 전체 성능 점검 (냉방·난방)</li>
-            <li><i class="fas fa-check"></i> 필터 상태 점검 및 교체 안내</li>
-            <li><i class="fas fa-check"></i> 냉매 압력 확인</li>
-            <li><i class="fas fa-check"></i> 시즌 전 사전 예방 점검</li>
-          </ul>
-          <a href="#contact" class="pricing-btn pricing-btn-outline">문의하기</a>
+        <div class="price-row">
+          <span class="price-name">투인원</span>
+          <span class="price-val">130,000원</span>
+        </div>
+        <div class="price-row">
+          <span class="price-name">4way (천장형)</span>
+          <span class="price-val">150,000 ~ 250,000원</span>
+        </div>
+        <div class="price-row">
+          <span class="price-name">1way (천장형)</span>
+          <span class="price-val">100,000원</span>
+        </div>
+        <div class="price-row">
+          <span class="price-name">진공 작업</span>
+          <span class="price-val">100,000원</span>
+        </div>
+        <div class="price-row">
+          <span class="price-name">아파트 추가 실내기 <span class="price-sub">대당</span></span>
+          <span class="price-val">+80,000원</span>
+        </div>
+        <div class="price-row price-note-row">
+          <span class="price-name">멀티시스템 (용량 큰 경우)</span>
+          <span class="price-val price-consult">별도 협의</span>
         </div>
       </div>
-      <p style="text-align:center;margin-top:32px;font-size:13px;color:var(--text-light);">
-        <i class="fas fa-info-circle"></i> 위 요금은 기본 가격 기준이며, 현장 상황에 따라 달라질 수 있습니다. 정확한 견적은 방문 후 안내드립니다.
+
+      <!-- 누설 수리 -->
+      <div class="price-section-title" style="margin-top:40px"><i class="fas fa-wrench"></i> 냉매 누설 수리</div>
+      <div class="price-table">
+        <div class="price-row">
+          <span class="price-name">벽걸이형</span>
+          <span class="price-val">350,000원</span>
+        </div>
+        <div class="price-row">
+          <span class="price-name">스탠드형</span>
+          <span class="price-val">450,000원</span>
+        </div>
+        <div class="price-row">
+          <span class="price-name">투인원</span>
+          <span class="price-val">550,000원</span>
+        </div>
+        <div class="price-row">
+          <span class="price-name">4way (싱글)</span>
+          <span class="price-val">800,000원</span>
+        </div>
+        <div class="price-row price-note-row">
+          <span class="price-name">4way (멀티시스템)</span>
+          <span class="price-val price-consult">견적서 진행</span>
+        </div>
+        <div class="price-row">
+          <span class="price-name">1way (싱글)</span>
+          <span class="price-val">500,000원</span>
+        </div>
+        <div class="price-row price-note-row">
+          <span class="price-name">1way (멀티시스템)</span>
+          <span class="price-val price-consult">견적서 진행</span>
+        </div>
+      </div>
+
+      <!-- 기타 -->
+      <div class="price-section-title" style="margin-top:40px"><i class="fas fa-info-circle"></i> 기타</div>
+      <div class="price-table">
+        <div class="price-row">
+          <span class="price-name">물 떨어짐 수리</span>
+          <span class="price-val price-consult">현장 견적</span>
+        </div>
+        <div class="price-row">
+          <span class="price-name">간단한 수리</span>
+          <span class="price-val">출장비 수준에서 해결</span>
+        </div>
+      </div>
+
+      <p style="text-align:center;margin-top:36px;font-size:13px;color:var(--text-light);">
+        <i class="fas fa-info-circle"></i> 위 요금은 기본 가격 기준이며, 현장 상황에 따라 달라질 수 있습니다.
       </p>
     </div>
   </section>
@@ -1379,7 +1471,7 @@
         <div class="contact-info">
           <div class="emergency-box">
             <p>📞 전화 문의 (오전 8시 ~ 오후 9시)</p>
-            <a href="tel:010-0000-0000">010-0000-0000</a>
+            <a href="tel:010-6671-3280">010-6671-3280</a>
           </div>
           <div class="contact-item">
             <div class="contact-item-icon"><i class="fas fa-comment-dots"></i></div>
@@ -1431,7 +1523,7 @@
         </div>
         <div class="footer-col">
           <h5>연락처</h5>
-          <a href="tel:010-0000-0000">📞 010-0000-0000</a>
+          <a href="tel:010-6671-3280">📞 010-6671-3280</a>
           <p>⏰ 평일·주말 08:00 ~ 21:00</p>
           <p>📍 서울·경기·인천 전 지역</p>
           <p style="margin-top:12px;font-size:12px;color:rgba(255,255,255,0.25);">사업자번호: 000-00-00000</p>
@@ -1450,7 +1542,7 @@
 
   <!-- FLOATING CTA (mobile) -->
   <div class="floating-cta">
-    <a href="tel:010-0000-0000" class="fcta-call">
+    <a href="tel:010-6671-3280" class="fcta-call">
       <i class="fas fa-phone"></i> 지금 전화하기
     </a>
   </div>
