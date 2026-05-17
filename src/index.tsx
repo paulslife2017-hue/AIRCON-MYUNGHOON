@@ -1549,11 +1549,11 @@ function mainPage() {
           <a href="tel:010-6671-3280">📞 010-6671-3280</a>
           <p>⏰ 평일·주말 08:00 ~ 21:00</p>
           <p>📍 서울·경기·인천 전 지역</p>
-          <p style="margin-top:12px;font-size:12px;color:rgba(255,255,255,0.25);">사업자번호: 000-00-00000</p>
+          <p style="margin-top:12px;font-size:12px;color:rgba(255,255,255,0.25);">대표: 김명훈 · 사업자번호: 249-19-02401</p>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>© 2024 쿨케어 (Cool Care). All rights reserved.</p>
+        <p>© 2024 쿨케어 (Cool Care) · 대표 김명훈 · 사업자번호 249-19-02401</p>
         <div class="footer-badges">
           <span class="footer-badge">전문기술</span>
           <span class="footer-badge">30일 AS</span>
