@@ -1053,10 +1053,6 @@
         <a href="#contact">문의</a>
       </nav>
       <div class="header-cta">
-        <a href="tel:010-2343-2966" class="btn-call" onclick="trackPhoneClick('header')">
-          <i class="fas fa-phone"></i>
-          <span class="hide-sm">지금 전화하기</span>
-        </a>
         <div class="hamburger" id="hamburger" onclick="toggleMenu()">
           <span></span><span></span><span></span>
         </div>
@@ -1095,7 +1091,7 @@
         </p>
         <div class="hero-actions">
           <a href="tel:010-2343-2966" class="btn-primary" onclick="trackPhoneClick('hero')">
-            <i class="fas fa-phone"></i> 지금 바로 전화
+            <i class="fas fa-phone"></i> 지금 바로 전화하기
           </a>
           <a href="#contact" class="btn-outline">
             <i class="fas fa-clipboard-list"></i> 견적 문의
@@ -1483,7 +1479,7 @@
         <div class="contact-info">
           <div class="emergency-box">
             <p>📞 전화 문의 (오전 8시 ~ 오후 9시)</p>
-            <a href="tel:010-2343-2966" onclick="trackPhoneClick('contact')">010-2343-2966</a>
+            <a href="tel:010-2343-2966" onclick="trackPhoneClick('contact')" style="font-size:20px;"><i class="fas fa-phone-alt" style="margin-right:8px;"></i>전화 연결하기</a>
           </div>
           <div class="contact-item">
             <div class="contact-item-icon"><i class="fas fa-comment-dots"></i></div>
@@ -1535,7 +1531,7 @@
         </div>
         <div class="footer-col">
           <h5>연락처</h5>
-          <a href="tel:010-2343-2966" onclick="trackPhoneClick('footer')">📞 010-2343-2966</a>
+          <a href="tel:010-2343-2966" onclick="trackPhoneClick('footer')">📞 전화 문의하기</a>
           <p>⏰ 평일·주말 08:00 ~ 21:00</p>
           <p>📍 서울·경기·인천 전 지역</p>
           <p style="margin-top:12px;font-size:12px;color:rgba(255,255,255,0.25);">대표: 김명훈 · 사업자번호: 249-19-02401</p>
@@ -1555,7 +1551,7 @@
   <!-- FLOATING CTA (mobile) -->
   <div class="floating-cta">
     <a href="tel:010-2343-2966" class="fcta-call" onclick="trackPhoneClick('floating')" id="floating-call-btn">
-      <i class="fas fa-phone"></i> 지금 전화하기 · 010-2343-2966
+      <i class="fas fa-phone"></i> 지금 전화하기
     </a>
   </div>
 
@@ -1566,27 +1562,42 @@
   <div id="admin-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:99999;align-items:center;justify-content:center;">
     <div style="background:#0A0F1E;border:1px solid rgba(0,87,255,0.4);border-radius:20px;padding:40px;max-width:480px;width:90%;position:relative;">
       <button onclick="closeAdmin()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.1);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;">✕</button>
-      <h2 style="color:#fff;font-size:20px;font-weight:800;margin-bottom:6px;"><i class="fas fa-chart-bar" style="color:#00C2FF;"></i> 관리자 통계</h2>
-      <p style="color:rgba(255,255,255,0.4);font-size:12px;margin-bottom:28px;">에어컨해결사 · 방문 &amp; 전화 클릭 현황</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px;">
-        <div style="background:rgba(0,87,255,0.15);border:1px solid rgba(0,87,255,0.3);border-radius:14px;padding:20px;text-align:center;">
-          <div style="font-size:36px;font-weight:800;color:#fff;" id="stat-visits">0</div>
-          <div style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:4px;">총 방문 수</div>
+
+      <!-- 비밀번호 입력 화면 -->
+      <div id="admin-login">
+        <h2 style="color:#fff;font-size:20px;font-weight:800;margin-bottom:6px;"><i class="fas fa-lock" style="color:#00C2FF;"></i> 관리자 로그인</h2>
+        <p style="color:rgba(255,255,255,0.4);font-size:12px;margin-bottom:24px;">비밀번호를 입력하세요</p>
+        <div style="display:flex;gap:10px;">
+          <input id="admin-pw-input" type="password" placeholder="비밀번호" onkeydown="if(event.key==='Enter')checkAdminPw()" style="flex:1;background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.15);border-radius:10px;padding:13px 16px;color:#fff;font-size:15px;outline:none;font-family:inherit;" />
+          <button onclick="checkAdminPw()" style="background:linear-gradient(135deg,#0057FF,#00C2FF);border:none;border-radius:10px;color:#fff;padding:13px 20px;font-size:14px;font-weight:700;cursor:pointer;">확인</button>
         </div>
-        <div style="background:rgba(0,194,255,0.12);border:1px solid rgba(0,194,255,0.3);border-radius:14px;padding:20px;text-align:center;">
-          <div style="font-size:36px;font-weight:800;color:#fff;" id="stat-clicks">0</div>
-          <div style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:4px;">전화 클릭 수</div>
+        <p id="admin-pw-error" style="color:#ef4444;font-size:12px;margin-top:10px;display:none;">비밀번호가 틀렸습니다.</p>
+      </div>
+
+      <!-- 통계 화면 (비밀번호 통과 후) -->
+      <div id="admin-stats" style="display:none;">
+        <h2 style="color:#fff;font-size:20px;font-weight:800;margin-bottom:6px;"><i class="fas fa-chart-bar" style="color:#00C2FF;"></i> 관리자 통계</h2>
+        <p style="color:rgba(255,255,255,0.4);font-size:12px;margin-bottom:24px;">에어컨해결사 · 방문 &amp; 전화 클릭 현황</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;">
+          <div style="background:rgba(0,87,255,0.15);border:1px solid rgba(0,87,255,0.3);border-radius:14px;padding:20px;text-align:center;">
+            <div style="font-size:36px;font-weight:800;color:#fff;" id="stat-visits">0</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:4px;">총 방문 수</div>
+          </div>
+          <div style="background:rgba(0,194,255,0.12);border:1px solid rgba(0,194,255,0.3);border-radius:14px;padding:20px;text-align:center;">
+            <div style="font-size:36px;font-weight:800;color:#fff;" id="stat-clicks">0</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:4px;">전화 클릭 수</div>
+          </div>
         </div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;margin-bottom:14px;">
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:10px;font-weight:600;">클릭 위치별 분석</div>
+          <div id="stat-breakdown" style="font-size:13px;color:rgba(255,255,255,0.7);line-height:2;"></div>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;margin-bottom:18px;">
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:6px;font-weight:600;">최근 방문 기록 (최대 5개)</div>
+          <div id="stat-recent" style="font-size:12px;color:rgba(255,255,255,0.55);line-height:2;"></div>
+        </div>
+        <button onclick="resetStats()" style="width:100%;padding:12px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);border-radius:10px;color:#ef4444;font-size:13px;font-weight:600;cursor:pointer;">통계 초기화</button>
       </div>
-      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;margin-bottom:16px;">
-        <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:10px;font-weight:600;">클릭 위치별 분석</div>
-        <div id="stat-breakdown" style="font-size:13px;color:rgba(255,255,255,0.7);line-height:2;"></div>
-      </div>
-      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;margin-bottom:20px;">
-        <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:6px;font-weight:600;">최근 방문 기록 (최대 5개)</div>
-        <div id="stat-recent" style="font-size:12px;color:rgba(255,255,255,0.55);line-height:2;"></div>
-      </div>
-      <button onclick="resetStats()" style="width:100%;padding:12px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);border-radius:10px;color:#ef4444;font-size:13px;font-weight:600;cursor:pointer;">통계 초기화</button>
     </div>
   </div>
 
@@ -1627,8 +1638,9 @@
     }
 
     // ═══════════════════════════════════════════
-    // 🔐 관리자 페이지 (로고 3번 연속 클릭)
+    // 🔐 관리자 페이지 (로고 3번 연속 클릭 + 비밀번호)
     // ═══════════════════════════════════════════
+    const ADMIN_PW = '1234'  // ← 비밀번호 변경 시 여기만 수정
     let logoClickCount = 0
     let logoClickTimer = null
 
@@ -1637,13 +1649,40 @@
       clearTimeout(logoClickTimer)
       if (logoClickCount >= 3) {
         logoClickCount = 0
-        openAdmin()
+        openAdminLogin()
         return
       }
       logoClickTimer = setTimeout(() => { logoClickCount = 0 }, 2000)
     }
 
-    function openAdmin() {
+    // 로고 3번 클릭 → 비밀번호 입력 화면 표시
+    function openAdminLogin() {
+      document.getElementById('admin-login').style.display = 'block'
+      document.getElementById('admin-stats').style.display = 'none'
+      document.getElementById('admin-pw-input').value = ''
+      document.getElementById('admin-pw-error').style.display = 'none'
+      const overlay = document.getElementById('admin-overlay')
+      overlay.style.display = 'flex'
+      setTimeout(() => document.getElementById('admin-pw-input').focus(), 100)
+    }
+
+    // 비밀번호 확인
+    function checkAdminPw() {
+      const input = document.getElementById('admin-pw-input').value
+      if (input === ADMIN_PW) {
+        document.getElementById('admin-pw-error').style.display = 'none'
+        showAdminStats()
+      } else {
+        document.getElementById('admin-pw-error').style.display = 'block'
+        document.getElementById('admin-pw-input').value = ''
+        document.getElementById('admin-pw-input').focus()
+      }
+    }
+
+    // 통계 데이터 표시
+    function showAdminStats() {
+      document.getElementById('admin-login').style.display = 'none'
+      document.getElementById('admin-stats').style.display = 'block'
       const s = getStats()
       document.getElementById('stat-visits').textContent = s.visits || 0
       document.getElementById('stat-clicks').textContent = s.phoneclicks || 0
@@ -1660,8 +1699,6 @@
       document.getElementById('stat-recent').innerHTML = recent.length
         ? recent.map((t,i) => `<div>${i+1}. ${t}</div>`).join('')
         : '<div style="color:rgba(255,255,255,0.3)">방문 기록 없음</div>'
-      const overlay = document.getElementById('admin-overlay')
-      overlay.style.display = 'flex'
     }
 
     function closeAdmin() {
@@ -1671,7 +1708,7 @@
     function resetStats() {
       if (!confirm('통계를 초기화하시겠습니까?')) return
       localStorage.removeItem(STATS_KEY)
-      openAdmin()
+      showAdminStats()
     }
 
     // ESC 키로 관리자 닫기
