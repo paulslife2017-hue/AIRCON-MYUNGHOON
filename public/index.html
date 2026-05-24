@@ -1560,7 +1560,7 @@
 
   <!-- ADMIN OVERLAY -->
   <div id="admin-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:99999;align-items:center;justify-content:center;">
-    <div style="background:#0A0F1E;border:1px solid rgba(0,87,255,0.4);border-radius:20px;padding:40px;max-width:480px;width:90%;position:relative;">
+    <div style="background:#0A0F1E;border:1px solid rgba(0,87,255,0.4);border-radius:20px;padding:32px;max-width:560px;width:95%;position:relative;">
       <button onclick="closeAdmin()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.1);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;">✕</button>
 
       <!-- 비밀번호 입력 화면 -->
@@ -1575,72 +1575,94 @@
       </div>
 
       <!-- 통계 화면 (비밀번호 통과 후) -->
-      <div id="admin-stats" style="display:none;">
-        <h2 style="color:#fff;font-size:20px;font-weight:800;margin-bottom:6px;"><i class="fas fa-chart-bar" style="color:#00C2FF;"></i> 관리자 통계</h2>
-        <p style="color:rgba(255,255,255,0.4);font-size:12px;margin-bottom:24px;">에어컨해결사 · 방문 &amp; 전화 클릭 현황</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;">
-          <div style="background:rgba(0,87,255,0.15);border:1px solid rgba(0,87,255,0.3);border-radius:14px;padding:20px;text-align:center;">
-            <div style="font-size:36px;font-weight:800;color:#fff;" id="stat-visits">0</div>
-            <div style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:4px;">총 방문 수</div>
+      <div id="admin-stats" style="display:none;max-height:85vh;overflow-y:auto;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <h2 style="color:#fff;font-size:20px;font-weight:800;"><i class="fas fa-chart-bar" style="color:#00C2FF;"></i> 관리자 통계</h2>
+          <button onclick="refreshStats()" style="background:rgba(0,87,255,0.3);border:1px solid rgba(0,87,255,0.5);border-radius:8px;color:#fff;padding:6px 12px;font-size:12px;cursor:pointer;">🔄 새로고침</button>
+        </div>
+        <p style="color:rgba(255,255,255,0.4);font-size:12px;margin-bottom:18px;">에어컨해결사 · 실시간 방문 &amp; 클릭 현황 (Neon DB)</p>
+
+        <!-- 4박스 요약 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+          <div style="background:rgba(0,87,255,0.15);border:1px solid rgba(0,87,255,0.3);border-radius:12px;padding:16px;text-align:center;">
+            <div style="font-size:28px;font-weight:800;color:#fff;" id="stat-total-visits">-</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:3px;">총 방문 수</div>
           </div>
-          <div style="background:rgba(0,194,255,0.12);border:1px solid rgba(0,194,255,0.3);border-radius:14px;padding:20px;text-align:center;">
-            <div style="font-size:36px;font-weight:800;color:#fff;" id="stat-clicks">0</div>
-            <div style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:4px;">전화 클릭 수</div>
+          <div style="background:rgba(0,194,255,0.12);border:1px solid rgba(0,194,255,0.3);border-radius:12px;padding:16px;text-align:center;">
+            <div style="font-size:28px;font-weight:800;color:#00C2FF;" id="stat-today-visits">-</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:3px;">오늘 방문</div>
+          </div>
+          <div style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:16px;text-align:center;">
+            <div style="font-size:28px;font-weight:800;color:#F59E0B;" id="stat-total-clicks">-</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:3px;">총 전화 클릭</div>
+          </div>
+          <div style="background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);border-radius:12px;padding:16px;text-align:center;">
+            <div style="font-size:28px;font-weight:800;color:#22C55E;" id="stat-today-clicks">-</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:3px;">오늘 클릭</div>
           </div>
         </div>
-        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;margin-bottom:14px;">
-          <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:10px;font-weight:600;">클릭 위치별 분석</div>
-          <div id="stat-breakdown" style="font-size:13px;color:rgba(255,255,255,0.7);line-height:2;"></div>
+
+        <!-- 유입경로 -->
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:10px;font-weight:700;letter-spacing:0.5px;">📡 유입경로 TOP5</div>
+          <div id="stat-referrer" style="font-size:13px;color:rgba(255,255,255,0.8);"></div>
         </div>
-        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;margin-bottom:18px;">
-          <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:6px;font-weight:600;">최근 방문 기록 (최대 5개)</div>
-          <div id="stat-recent" style="font-size:12px;color:rgba(255,255,255,0.55);line-height:2;"></div>
+
+        <!-- 기기별 -->
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:10px;font-weight:700;letter-spacing:0.5px;">📱 기기별 방문</div>
+          <div id="stat-device" style="font-size:13px;color:rgba(255,255,255,0.8);"></div>
         </div>
-        <button onclick="resetStats()" style="width:100%;padding:12px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);border-radius:10px;color:#ef4444;font-size:13px;font-weight:600;cursor:pointer;">통계 초기화</button>
+
+        <!-- 클릭 위치별 -->
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:10px;font-weight:700;letter-spacing:0.5px;">📞 클릭 위치별</div>
+          <div id="stat-click-location" style="font-size:13px;color:rgba(255,255,255,0.8);"></div>
+        </div>
+
+        <!-- 최근 방문 20건 -->
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:10px;font-weight:700;letter-spacing:0.5px;">🕐 최근 방문 20건</div>
+          <div id="stat-recent-visits" style="font-size:12px;color:rgba(255,255,255,0.7);max-height:200px;overflow-y:auto;"></div>
+        </div>
+
+        <!-- 최근 클릭 20건 -->
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;margin-bottom:16px;">
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:10px;font-weight:700;letter-spacing:0.5px;">📲 최근 전화 클릭 20건</div>
+          <div id="stat-recent-clicks" style="font-size:12px;color:rgba(255,255,255,0.7);max-height:200px;overflow-y:auto;"></div>
+        </div>
+
+        <button onclick="resetStats()" style="width:100%;padding:10px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:10px;color:rgba(239,68,68,0.7);font-size:12px;font-weight:600;cursor:pointer;">통계 초기화 (DB 직접 삭제 필요)</button>
       </div>
     </div>
   </div>
 
   <script>
     // ═══════════════════════════════════════════
-    // 📊 통계 수집 모듈
+    // 📊 방문자 추적 모듈 (Neon DB 서버 기반)
     // ═══════════════════════════════════════════
-    const STATS_KEY = 'aircon_stats_v1'
 
-    function getStats() {
-      try { return JSON.parse(localStorage.getItem(STATS_KEY)) || { visits: 0, phoneclicks: 0, breakdown: {}, recent: [] } }
-      catch(e) { return { visits: 0, phoneclicks: 0, breakdown: {}, recent: [] } }
-    }
-
-    function saveStats(s) {
-      try { localStorage.setItem(STATS_KEY, JSON.stringify(s)) } catch(e) {}
-    }
-
-    // 페이지뷰 기록
+    // 페이지뷰 기록 → /api/track
     (function recordVisit() {
-      const s = getStats()
-      s.visits = (s.visits || 0) + 1
-      const now = new Date()
-      const ts = now.toLocaleDateString('ko-KR') + ' ' + now.toLocaleTimeString('ko-KR', {hour:'2-digit',minute:'2-digit'})
-      s.recent = s.recent || []
-      s.recent.unshift(ts)
-      if (s.recent.length > 20) s.recent = s.recent.slice(0, 20)
-      saveStats(s)
+      fetch('/api/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'visit' })
+      }).catch(() => {})
     })()
 
-    // 전화 클릭 추적
+    // 전화 클릭 추적 → /api/track
     function trackPhoneClick(location) {
-      const s = getStats()
-      s.phoneclicks = (s.phoneclicks || 0) + 1
-      s.breakdown = s.breakdown || {}
-      s.breakdown[location] = (s.breakdown[location] || 0) + 1
-      saveStats(s)
+      fetch('/api/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'click', location: location })
+      }).catch(() => {})
     }
 
     // ═══════════════════════════════════════════
     // 🔐 관리자 페이지 (로고 3번 연속 클릭 + 비밀번호)
     // ═══════════════════════════════════════════
-    const ADMIN_PW = '0907'  // ← 비밀번호 변경 시 여기만 수정
     let logoClickCount = 0
     let logoClickTimer = null
 
@@ -1666,39 +1688,136 @@
       setTimeout(() => document.getElementById('admin-pw-input').focus(), 100)
     }
 
-    // 비밀번호 확인
-    function checkAdminPw() {
-      const input = document.getElementById('admin-pw-input').value
-      if (input === ADMIN_PW) {
-        document.getElementById('admin-pw-error').style.display = 'none'
-        showAdminStats()
-      } else {
-        document.getElementById('admin-pw-error').style.display = 'block'
-        document.getElementById('admin-pw-input').value = ''
-        document.getElementById('admin-pw-input').focus()
+    // 비밀번호 확인 → 서버에서 검증 후 통계 표시
+    async function checkAdminPw() {
+      const input = document.getElementById('admin-pw-input').value.trim()
+      if (!input) return
+      const btn = document.querySelector('#admin-login button[onclick="checkAdminPw()"]')
+      if (btn) { btn.textContent = '확인 중...'; btn.disabled = true }
+      try {
+        const res = await fetch('/api/stats', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: input })
+        })
+        if (res.status === 401) {
+          document.getElementById('admin-pw-error').style.display = 'block'
+          document.getElementById('admin-pw-input').value = ''
+          document.getElementById('admin-pw-input').focus()
+        } else if (res.ok) {
+          document.getElementById('admin-pw-error').style.display = 'none'
+          document.getElementById('admin-pw-input').dataset.lastPw = input
+          const data = await res.json()
+          renderAdminStats(data)
+        } else {
+          alert('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.')
+        }
+      } catch(e) {
+        alert('네트워크 오류가 발생했습니다.')
+      } finally {
+        if (btn) { btn.textContent = '확인'; btn.disabled = false }
       }
     }
 
-    // 통계 데이터 표시
-    function showAdminStats() {
+    // 통계 데이터 렌더링 (서버 응답 기반)
+    function renderAdminStats(d) {
       document.getElementById('admin-login').style.display = 'none'
       document.getElementById('admin-stats').style.display = 'block'
-      const s = getStats()
-      document.getElementById('stat-visits').textContent = s.visits || 0
-      document.getElementById('stat-clicks').textContent = s.phoneclicks || 0
-      // 위치별 분석
-      const bd = s.breakdown || {}
-      const labels = { header:'헤더 전화버튼', hero:'상단 전화버튼', contact:'문의 섹션', footer:'푸터', floating:'플로팅 버튼' }
-      let bdHtml = ''
-      for (const [k, v] of Object.entries(bd)) {
-        bdHtml += `<div>📍 ${labels[k]||k}: <strong style="color:#00C2FF">${v}회</strong></div>`
+
+      // 기본 수치
+      document.getElementById('stat-total-visits').textContent = (d.totalVisits || 0).toLocaleString()
+      document.getElementById('stat-today-visits').textContent = (d.todayVisits || 0).toLocaleString()
+      document.getElementById('stat-total-clicks').textContent = (d.totalClicks || 0).toLocaleString()
+      document.getElementById('stat-today-clicks').textContent = (d.todayClicks || 0).toLocaleString()
+
+      // 기기별 통계
+      const deviceEl = document.getElementById('stat-device')
+      if (deviceEl) {
+        const dev = d.deviceStats || []
+        const devLabels = { mobile: '📱 모바일', desktop: '🖥️ PC', tablet: '📟 태블릿' }
+        deviceEl.innerHTML = dev.length
+          ? dev.map(r => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+              <span>${devLabels[r.device_type] || r.device_type}</span>
+              <strong style="color:#00C2FF">${parseInt(r.count).toLocaleString()}회</strong>
+            </div>`).join('')
+          : '<div style="color:rgba(255,255,255,0.3);font-size:13px;">데이터 없음</div>'
       }
-      document.getElementById('stat-breakdown').innerHTML = bdHtml || '<div style="color:rgba(255,255,255,0.3)">클릭 기록 없음</div>'
-      // 최근 방문
-      const recent = (s.recent || []).slice(0, 5)
-      document.getElementById('stat-recent').innerHTML = recent.length
-        ? recent.map((t,i) => `<div>${i+1}. ${t}</div>`).join('')
-        : '<div style="color:rgba(255,255,255,0.3)">방문 기록 없음</div>'
+
+      // 유입경로 TOP5
+      const refEl = document.getElementById('stat-referrer')
+      if (refEl) {
+        const refs = d.referrerStats || []
+        const refLabels = { naver:'🟢 네이버', google:'🔵 구글', kakao:'🟡 카카오', direct:'⚪ 직접입력', other:'🔗 기타' }
+        refEl.innerHTML = refs.length
+          ? refs.map(r => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+              <span>${refLabels[r.referrer_type] || r.referrer_type || '기타'}</span>
+              <strong style="color:#00C2FF">${parseInt(r.count).toLocaleString()}회</strong>
+            </div>`).join('')
+          : '<div style="color:rgba(255,255,255,0.3);font-size:13px;">데이터 없음</div>'
+      }
+
+      // 클릭 위치별 통계
+      const locEl = document.getElementById('stat-click-location')
+      if (locEl) {
+        const locs = d.clickLocationStats || []
+        const locLabels = { hero:'🔝 상단버튼', contact:'📋 문의섹션', footer:'📌 푸터', floating:'📞 플로팅버튼', header:'🔗 헤더버튼' }
+        locEl.innerHTML = locs.length
+          ? locs.map(r => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+              <span>${locLabels[r.location] || r.location || '기타'}</span>
+              <strong style="color:#F59E0B">${parseInt(r.count).toLocaleString()}회</strong>
+            </div>`).join('')
+          : '<div style="color:rgba(255,255,255,0.3);font-size:13px;">클릭 기록 없음</div>'
+      }
+
+      // 최근 방문 20건
+      const recentVisitEl = document.getElementById('stat-recent-visits')
+      if (recentVisitEl) {
+        const rv = d.recentVisits || []
+        recentVisitEl.innerHTML = rv.length
+          ? rv.map((r, i) => {
+              const dt = new Date(r.visited_at)
+              const ts = dt.toLocaleDateString('ko-KR') + ' ' + dt.toLocaleTimeString('ko-KR', {hour:'2-digit',minute:'2-digit'})
+              const devIcon = r.device_type === 'mobile' ? '📱' : r.device_type === 'tablet' ? '📟' : '🖥️'
+              return `<div style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;">
+                <span style="color:rgba(255,255,255,0.4)">${i+1}.</span>
+                ${devIcon} ${ts}
+                ${r.referrer_type ? `<span style="color:#00C2FF;margin-left:6px;">[${r.referrer_type}]</span>` : ''}
+              </div>`
+            }).join('')
+          : '<div style="color:rgba(255,255,255,0.3);font-size:13px;">방문 기록 없음</div>'
+      }
+
+      // 최근 클릭 20건
+      const recentClickEl = document.getElementById('stat-recent-clicks')
+      if (recentClickEl) {
+        const rc = d.recentClicks || []
+        const locLabels2 = { hero:'상단버튼', contact:'문의섹션', footer:'푸터', floating:'플로팅', header:'헤더' }
+        recentClickEl.innerHTML = rc.length
+          ? rc.map((r, i) => {
+              const dt = new Date(r.clicked_at)
+              const ts = dt.toLocaleDateString('ko-KR') + ' ' + dt.toLocaleTimeString('ko-KR', {hour:'2-digit',minute:'2-digit'})
+              return `<div style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;">
+                <span style="color:rgba(255,255,255,0.4)">${i+1}.</span>
+                📞 ${ts}
+                <span style="color:#F59E0B;margin-left:6px;">[${locLabels2[r.location] || r.location || ''}]</span>
+              </div>`
+            }).join('')
+          : '<div style="color:rgba(255,255,255,0.3);font-size:13px;">클릭 기록 없음</div>'
+      }
+    }
+
+    // 통계 새로고침 (현재 비밀번호로 재요청)
+    async function refreshStats() {
+      const pw = document.getElementById('admin-pw-input').dataset.lastPw || ''
+      if (!pw) return
+      try {
+        const res = await fetch('/api/stats', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pw })
+        })
+        if (res.ok) { const data = await res.json(); renderAdminStats(data) }
+      } catch(e) {}
     }
 
     function closeAdmin() {
@@ -1706,9 +1825,7 @@
     }
 
     function resetStats() {
-      if (!confirm('통계를 초기화하시겠습니까?')) return
-      localStorage.removeItem(STATS_KEY)
-      showAdminStats()
+      alert('통계 초기화는 Neon DB에서 직접 수행해주세요.')
     }
 
     // ESC 키로 관리자 닫기
