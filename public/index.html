@@ -1689,6 +1689,12 @@
           </div>
         </div>
 
+        <!-- 📊 날짜별 전화 콜 × 유입경로 테이블 -->
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:10px;font-weight:700;">📊 날짜별 전화 콜 현황</div>
+          <div id="stat-daily-click-table"></div>
+        </div>
+
         <!-- 📅 전화 클릭 달력 히트맵 -->
         <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;margin-bottom:10px;">
           <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:12px;font-weight:700;">📅 최근 30일 전화 클릭</div>
@@ -1764,20 +1770,30 @@
     // ═══════════════════════════════════════════
 
     // 페이지뷰 기록 → /api/track
+    // URL 파라미터에서 utm_source 추출 후 sessionStorage 저장
+    (function initUTM() {
+      const p = new URLSearchParams(location.search)
+      const utm = p.get('utm') || p.get('utm_source') || ''
+      if (utm) sessionStorage.setItem('utm_source', utm)
+    })()
+
+    function getUTM() { return sessionStorage.getItem('utm_source') || '' }
+
+    // 페이지뷰 기록
     (function recordVisit() {
       fetch('/api/track', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'visit' })
+        body: JSON.stringify({ type: 'visit', utm_source: getUTM() })
       }).catch(() => {})
     })()
 
-    // 전화 클릭 추적 → /api/track
-    function trackPhoneClick(location) {
+    // 전화 클릭 추적
+    function trackPhoneClick(loc) {
       fetch('/api/track', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'click', location: location })
+        body: JSON.stringify({ type: 'click', location: loc, utm_source: getUTM() })
       }).catch(() => {})
     }
 
@@ -1890,7 +1906,7 @@
       }).join('')
     }
 
-    // ─── 유입경로 바 렌더링 ───
+    // ─── 유입경로 바 렌더링 (source 키 사용) ───
     function renderReferrer(elId, data, barColor) {
       const el = document.getElementById(elId)
       if (!el) return
@@ -1898,21 +1914,70 @@
         el.innerHTML = '<div style="color:rgba(255,255,255,0.25);font-size:12px;">데이터 없음</div>'
         return
       }
-      const total = data.reduce((s, r) => s + parseInt(r.count), 0)
+      const total = data.reduce((s, r) => s + r.count, 0)
       el.innerHTML = data.map(r => {
-        const info = REF_LABELS[r.referrer_type] || REF_LABELS.other
-        const cnt = parseInt(r.count)
-        const pct = total > 0 ? Math.round(cnt / total * 100) : 0
+        const info = REF_LABELS[r.source] || REF_LABELS.other
+        const pct = total > 0 ? Math.round(r.count / total * 100) : 0
         return `<div style="margin-bottom:8px;">
           <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
             <span style="font-size:12px;">${info.icon} ${info.name}</span>
-            <span style="font-size:12px;color:${barColor};font-weight:700;">${cnt}회 <span style="color:rgba(255,255,255,0.35);font-weight:400;">(${pct}%)</span></span>
+            <span style="font-size:12px;color:${barColor};font-weight:700;">${r.count}회 <span style="color:rgba(255,255,255,0.3);font-weight:400;">${pct}%</span></span>
           </div>
-          <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.08);">
-            <div style="height:4px;border-radius:2px;background:${info.color};width:${pct}%;transition:width 0.6s;"></div>
+          <div style="height:5px;border-radius:3px;background:rgba(255,255,255,0.07);">
+            <div style="height:5px;border-radius:3px;background:${info.color};width:${pct}%;transition:width 0.8s ease;"></div>
           </div>
         </div>`
       }).join('')
+    }
+
+    // ─── 일별 클릭 × 유입경로 테이블 ───
+    function renderDailyClickTable(dailyClicks, dailyClickBySource) {
+      const el = document.getElementById('stat-daily-click-table')
+      if (!el || !dailyClicks || dailyClicks.length === 0) {
+        if (el) el.innerHTML = '<div style="color:rgba(255,255,255,0.25);font-size:12px;">데이터 없음</div>'
+        return
+      }
+      // source 목록
+      const sources = [...new Set((dailyClickBySource||[]).map(r => r.source))]
+      // day → { total, source별 }
+      const byDay = {}
+      dailyClicks.forEach(r => { byDay[r.day] = { total: r.count, sources: {} } })
+      ;(dailyClickBySource||[]).forEach(r => {
+        if (byDay[r.day]) byDay[r.day].sources[r.source] = r.count
+      })
+      const days = Object.keys(byDay).sort().reverse() // 최신순
+
+      const srcCols = sources.map(s => {
+        const info = REF_LABELS[s] || REF_LABELS.other
+        return `<th style="padding:6px 8px;text-align:center;font-size:11px;color:rgba(255,255,255,0.4);white-space:nowrap;">${info.icon}${info.name}</th>`
+      }).join('')
+
+      const rows = days.map(day => {
+        const d = byDay[day]
+        const mm_dd = day.slice(5) // MM-DD
+        const srcCells = sources.map(s => {
+          const cnt = d.sources[s] || 0
+          return `<td style="padding:6px 8px;text-align:center;font-size:12px;color:${cnt>0?'#F59E0B':'rgba(255,255,255,0.2)'};">${cnt > 0 ? cnt+'건' : '-'}</td>`
+        }).join('')
+        return `<tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:6px 8px;font-size:12px;color:rgba(255,255,255,0.6);white-space:nowrap;">${mm_dd}</td>
+          <td style="padding:6px 8px;text-align:center;font-size:13px;font-weight:700;color:#22C55E;">${d.total}</td>
+          ${srcCells}
+        </tr>`
+      }).join('')
+
+      el.innerHTML = `<div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <thead>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+              <th style="padding:6px 8px;text-align:left;font-size:11px;color:rgba(255,255,255,0.4);">날짜</th>
+              <th style="padding:6px 8px;text-align:center;font-size:11px;color:rgba(255,255,255,0.4);">총 콜</th>
+              ${srcCols}
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`
     }
 
     // ─── 통계 데이터 렌더링 ───
@@ -1926,25 +1991,21 @@
       document.getElementById('stat-total-clicks').textContent = (d.totalClicks || 0).toLocaleString()
       document.getElementById('stat-today-clicks').textContent = (d.todayClicks || 0).toLocaleString()
 
+      // 일별 콜 × 유입경로 테이블
+      renderDailyClickTable(d.dailyClicks, d.dailyClickBySource)
+
       // 달력 히트맵 - 전화 클릭 (주황)
       renderHeatmap('stat-click-calendar', d.dailyClicks,
-        (ratio, cnt) => cnt === 0
-          ? 'rgba(255,255,255,0.04)'
-          : `rgba(245,158,11,${0.2 + ratio * 0.8})`
+        (ratio, cnt) => cnt === 0 ? 'rgba(255,255,255,0.04)' : `rgba(245,158,11,${0.2 + ratio * 0.8})`
       )
-
       // 달력 히트맵 - 방문자 (파랑)
       renderHeatmap('stat-visit-calendar', d.dailyVisits,
-        (ratio, cnt) => cnt === 0
-          ? 'rgba(255,255,255,0.04)'
-          : `rgba(0,194,255,${0.2 + ratio * 0.8})`
+        (ratio, cnt) => cnt === 0 ? 'rgba(255,255,255,0.04)' : `rgba(0,194,255,${0.2 + ratio * 0.8})`
       )
 
-      // 방문 유입경로
-      renderReferrer('stat-visit-referrer', d.visitReferrerStats, '#00C2FF')
-
-      // 클릭 유입경로 (어디서 보고 전화했는지)
-      renderReferrer('stat-click-referrer', d.clickReferrerStats, '#F59E0B')
+      // 방문/클릭 유입경로 바
+      renderReferrer('stat-visit-referrer', d.visitSourceStats, '#00C2FF')
+      renderReferrer('stat-click-referrer', d.clickSourceStats, '#F59E0B')
 
       // 기기별
       const devEl = document.getElementById('stat-device')
@@ -1952,9 +2013,8 @@
         const dev = d.deviceStats || []
         devEl.innerHTML = dev.length
           ? dev.map(r => `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-              <span>${DEV_LABELS[r.device_type] || r.device_type}</span>
-              <strong style="color:#00C2FF">${r.count}회</strong>
-            </div>`).join('')
+              <span>${DEV_LABELS[r.device_type]||r.device_type}</span>
+              <strong style="color:#00C2FF">${r.count}회</strong></div>`).join('')
           : '<div style="color:rgba(255,255,255,0.25);">데이터 없음</div>'
       }
 
@@ -1964,13 +2024,12 @@
         const locs = d.clickLocationStats || []
         locEl.innerHTML = locs.length
           ? locs.map(r => `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-              <span>${LOC_LABELS[r.location] || r.location}</span>
-              <strong style="color:#F59E0B">${r.count}회</strong>
-            </div>`).join('')
+              <span>${LOC_LABELS[r.location]||r.location}</span>
+              <strong style="color:#F59E0B">${r.count}회</strong></div>`).join('')
           : '<div style="color:rgba(255,255,255,0.25);">데이터 없음</div>'
       }
 
-      // 최근 클릭 20건 (유입경로 포함)
+      // 최근 클릭 20건
       const rcEl = document.getElementById('stat-recent-clicks')
       if (rcEl) {
         const rc = d.recentClicks || []
@@ -1978,18 +2037,18 @@
           ? rc.map((r, i) => {
               const dt = new Date(r.clicked_at)
               const ts = dt.toLocaleDateString('ko-KR',{month:'2-digit',day:'2-digit'}) + ' ' + dt.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})
-              const ref = REF_LABELS[r.referrer_type] || REF_LABELS.other
+              const ref = REF_LABELS[r.source] || REF_LABELS.other
               return `<div style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
                 <span style="color:rgba(255,255,255,0.35)">${i+1}.</span>
                 📞 <span style="color:#fff">${ts}</span>
-                <span style="color:#F59E0B;margin-left:4px;">[${LOC_LABELS[r.location]||r.location}]</span>
-                <span style="margin-left:4px;">${ref.icon}</span><span style="font-size:10px;color:rgba(255,255,255,0.4);"> ${ref.name}</span>
+                <span style="color:#F59E0B;margin-left:5px;">[${LOC_LABELS[r.location]||r.location}]</span>
+                <span style="margin-left:5px;font-size:13px;">${ref.icon}</span><span style="font-size:10px;color:rgba(255,255,255,0.4);"> ${ref.name}</span>
               </div>`
             }).join('')
           : '<div style="color:rgba(255,255,255,0.25);">기록 없음</div>'
       }
 
-      // 최근 방문 20건 (유입경로 포함)
+      // 최근 방문 20건
       const rvEl = document.getElementById('stat-recent-visits')
       if (rvEl) {
         const rv = d.recentVisits || []
@@ -1997,12 +2056,12 @@
           ? rv.map((r, i) => {
               const dt = new Date(r.visited_at)
               const ts = dt.toLocaleDateString('ko-KR',{month:'2-digit',day:'2-digit'}) + ' ' + dt.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})
-              const ref = REF_LABELS[r.referrer_type] || REF_LABELS.other
-              const dev = r.device_type === 'mobile' ? '📱' : r.device_type === 'tablet' ? '📟' : '🖥️'
+              const ref = REF_LABELS[r.source] || REF_LABELS.other
+              const dev = r.device_type==='mobile'?'📱':r.device_type==='tablet'?'📟':'🖥️'
               return `<div style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
                 <span style="color:rgba(255,255,255,0.35)">${i+1}.</span>
                 ${dev} <span style="color:#fff">${ts}</span>
-                <span style="margin-left:4px;">${ref.icon}</span><span style="font-size:10px;color:rgba(255,255,255,0.4);"> ${ref.name}</span>
+                <span style="margin-left:5px;font-size:13px;">${ref.icon}</span><span style="font-size:10px;color:rgba(255,255,255,0.4);"> ${ref.name}</span>
               </div>`
             }).join('')
           : '<div style="color:rgba(255,255,255,0.25);">기록 없음</div>'
