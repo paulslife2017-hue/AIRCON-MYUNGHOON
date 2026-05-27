@@ -9,7 +9,6 @@ const pool = new Pool({
   connectionTimeoutMillis: 5000,
 })
 
-// 기기 타입 감지 (tablet을 먼저 체크)
 function getDeviceType(ua = '') {
   if (!ua) return 'unknown'
   if (/tablet|ipad/i.test(ua)) return 'tablet'
@@ -17,7 +16,6 @@ function getDeviceType(ua = '') {
   return 'desktop'
 }
 
-// IP 추출
 function getIP(req) {
   return (
     req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
@@ -27,8 +25,20 @@ function getIP(req) {
   )
 }
 
+// referrer → 유입경로 분류 (당근마켓 포함)
+function classifyReferrer(ref = '') {
+  if (!ref) return 'direct'
+  if (/daangn|당근/.test(ref)) return 'daangn'
+  if (/naver/.test(ref)) return 'naver'
+  if (/google/.test(ref)) return 'google'
+  if (/kakao|kakaotalk/.test(ref)) return 'kakao'
+  if (/instagram/.test(ref)) return 'instagram'
+  if (/facebook|fb\.com/.test(ref)) return 'facebook'
+  if (/youtube/.test(ref)) return 'youtube'
+  return 'other'
+}
+
 export default async function handler(req, res) {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
@@ -40,6 +50,7 @@ export default async function handler(req, res) {
   const referrer = req.headers['referer'] || req.headers['referrer'] || ''
   const ip = getIP(req)
   const device = getDeviceType(ua)
+  const referrerType = classifyReferrer(referrer)
 
   try {
     if (type === 'visit') {
@@ -50,9 +61,9 @@ export default async function handler(req, res) {
       )
     } else if (type === 'click') {
       await pool.query(
-        `INSERT INTO phone_clicks (location, user_agent, ip, device_type)
-         VALUES ($1, $2, $3, $4)`,
-        [location || 'unknown', ua, ip, device]
+        `INSERT INTO phone_clicks (location, user_agent, ip, device_type, referrer)
+         VALUES ($1, $2, $3, $4, $5)`,
+        [location || 'unknown', ua, ip, device, referrer]
       )
     }
     return res.status(200).json({ ok: true })

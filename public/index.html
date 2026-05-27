@@ -1662,64 +1662,98 @@
       </div>
 
       <!-- 통계 화면 (비밀번호 통과 후) -->
-      <div id="admin-stats" style="display:none;max-height:85vh;overflow-y:auto;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-          <h2 style="color:#fff;font-size:20px;font-weight:800;"><i class="fas fa-chart-bar" style="color:#00C2FF;"></i> 관리자 통계</h2>
-          <button onclick="refreshStats()" style="background:rgba(0,87,255,0.3);border:1px solid rgba(0,87,255,0.5);border-radius:8px;color:#fff;padding:6px 12px;font-size:12px;cursor:pointer;">🔄 새로고침</button>
+      <div id="admin-stats" style="display:none;max-height:88vh;overflow-y:auto;padding-right:2px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <h2 style="color:#fff;font-size:18px;font-weight:800;"><i class="fas fa-chart-bar" style="color:#00C2FF;"></i> 관리자 통계</h2>
+          <button onclick="refreshStats()" style="background:rgba(0,87,255,0.3);border:1px solid rgba(0,87,255,0.5);border-radius:8px;color:#fff;padding:5px 11px;font-size:12px;cursor:pointer;">🔄 새로고침</button>
         </div>
-        <p style="color:rgba(255,255,255,0.4);font-size:12px;margin-bottom:18px;">에어컨해결사 · 실시간 방문 &amp; 클릭 현황 (Neon DB)</p>
+        <p style="color:rgba(255,255,255,0.35);font-size:11px;margin-bottom:14px;">에어컨해결사 · 실시간 현황</p>
 
         <!-- 4박스 요약 -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
-          <div style="background:rgba(0,87,255,0.15);border:1px solid rgba(0,87,255,0.3);border-radius:12px;padding:16px;text-align:center;">
-            <div style="font-size:28px;font-weight:800;color:#fff;" id="stat-total-visits">-</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:3px;">총 방문 수</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+          <div style="background:rgba(0,87,255,0.15);border:1px solid rgba(0,87,255,0.3);border-radius:12px;padding:14px;text-align:center;">
+            <div style="font-size:26px;font-weight:800;color:#fff;" id="stat-total-visits">-</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;">총 방문</div>
           </div>
-          <div style="background:rgba(0,194,255,0.12);border:1px solid rgba(0,194,255,0.3);border-radius:12px;padding:16px;text-align:center;">
-            <div style="font-size:28px;font-weight:800;color:#00C2FF;" id="stat-today-visits">-</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:3px;">오늘 방문</div>
+          <div style="background:rgba(0,194,255,0.12);border:1px solid rgba(0,194,255,0.3);border-radius:12px;padding:14px;text-align:center;">
+            <div style="font-size:26px;font-weight:800;color:#00C2FF;" id="stat-today-visits">-</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;">오늘 방문</div>
           </div>
-          <div style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:16px;text-align:center;">
-            <div style="font-size:28px;font-weight:800;color:#F59E0B;" id="stat-total-clicks">-</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:3px;">총 전화 클릭</div>
+          <div style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:14px;text-align:center;">
+            <div style="font-size:26px;font-weight:800;color:#F59E0B;" id="stat-total-clicks">-</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;">총 전화클릭</div>
           </div>
-          <div style="background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);border-radius:12px;padding:16px;text-align:center;">
-            <div style="font-size:28px;font-weight:800;color:#22C55E;" id="stat-today-clicks">-</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:3px;">오늘 클릭</div>
+          <div style="background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);border-radius:12px;padding:14px;text-align:center;">
+            <div style="font-size:26px;font-weight:800;color:#22C55E;" id="stat-today-clicks">-</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;">오늘 클릭</div>
           </div>
         </div>
 
-        <!-- 유입경로 -->
+        <!-- 📅 전화 클릭 달력 히트맵 -->
         <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;margin-bottom:10px;">
-          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:10px;font-weight:700;letter-spacing:0.5px;">📡 유입경로 TOP5</div>
-          <div id="stat-referrer" style="font-size:13px;color:rgba(255,255,255,0.8);"></div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:12px;font-weight:700;">📅 최근 30일 전화 클릭</div>
+          <div id="stat-click-calendar" style="display:flex;flex-wrap:wrap;gap:4px;"></div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:10px;font-size:10px;color:rgba(255,255,255,0.3);">
+            <span>적음</span>
+            <span style="width:12px;height:12px;border-radius:3px;background:rgba(245,158,11,0.15);display:inline-block;"></span>
+            <span style="width:12px;height:12px;border-radius:3px;background:rgba(245,158,11,0.4);display:inline-block;"></span>
+            <span style="width:12px;height:12px;border-radius:3px;background:rgba(245,158,11,0.7);display:inline-block;"></span>
+            <span style="width:12px;height:12px;border-radius:3px;background:#F59E0B;display:inline-block;"></span>
+            <span>많음</span>
+          </div>
         </div>
 
-        <!-- 기기별 -->
+        <!-- 📅 방문자 달력 히트맵 -->
         <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;margin-bottom:10px;">
-          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:10px;font-weight:700;letter-spacing:0.5px;">📱 기기별 방문</div>
-          <div id="stat-device" style="font-size:13px;color:rgba(255,255,255,0.8);"></div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:12px;font-weight:700;">📅 최근 30일 방문자</div>
+          <div id="stat-visit-calendar" style="display:flex;flex-wrap:wrap;gap:4px;"></div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:10px;font-size:10px;color:rgba(255,255,255,0.3);">
+            <span>적음</span>
+            <span style="width:12px;height:12px;border-radius:3px;background:rgba(0,194,255,0.15);display:inline-block;"></span>
+            <span style="width:12px;height:12px;border-radius:3px;background:rgba(0,194,255,0.4);display:inline-block;"></span>
+            <span style="width:12px;height:12px;border-radius:3px;background:rgba(0,194,255,0.7);display:inline-block;"></span>
+            <span style="width:12px;height:12px;border-radius:3px;background:#00C2FF;display:inline-block;"></span>
+            <span>많음</span>
+          </div>
         </div>
 
-        <!-- 클릭 위치별 -->
-        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;margin-bottom:10px;">
-          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:10px;font-weight:700;letter-spacing:0.5px;">📞 클릭 위치별</div>
-          <div id="stat-click-location" style="font-size:13px;color:rgba(255,255,255,0.8);"></div>
+        <!-- 📡 방문 유입경로 + 📞 클릭 유입경로 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;">
+            <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:10px;font-weight:700;">📡 방문 유입경로</div>
+            <div id="stat-visit-referrer" style="font-size:12px;color:rgba(255,255,255,0.8);"></div>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;">
+            <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:10px;font-weight:700;">📞 클릭 유입경로</div>
+            <div id="stat-click-referrer" style="font-size:12px;color:rgba(255,255,255,0.8);"></div>
+          </div>
         </div>
 
-        <!-- 최근 방문 20건 -->
-        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;margin-bottom:10px;">
-          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:10px;font-weight:700;letter-spacing:0.5px;">🕐 최근 방문 20건</div>
-          <div id="stat-recent-visits" style="font-size:12px;color:rgba(255,255,255,0.7);max-height:200px;overflow-y:auto;"></div>
+        <!-- 기기별 + 클릭위치별 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;">
+            <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:10px;font-weight:700;">📱 기기별</div>
+            <div id="stat-device" style="font-size:12px;color:rgba(255,255,255,0.8);"></div>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;">
+            <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:10px;font-weight:700;">📍 클릭 위치</div>
+            <div id="stat-click-location" style="font-size:12px;color:rgba(255,255,255,0.8);"></div>
+          </div>
         </div>
 
         <!-- 최근 클릭 20건 -->
-        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;margin-bottom:16px;">
-          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:10px;font-weight:700;letter-spacing:0.5px;">📲 최근 전화 클릭 20건</div>
-          <div id="stat-recent-clicks" style="font-size:12px;color:rgba(255,255,255,0.7);max-height:200px;overflow-y:auto;"></div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:10px;font-weight:700;">📲 최근 전화 클릭 20건</div>
+          <div id="stat-recent-clicks" style="font-size:12px;color:rgba(255,255,255,0.7);max-height:180px;overflow-y:auto;"></div>
         </div>
 
-        <button onclick="resetStats()" style="width:100%;padding:10px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:10px;color:rgba(239,68,68,0.7);font-size:12px;font-weight:600;cursor:pointer;">통계 초기화 (DB 직접 삭제 필요)</button>
+        <!-- 최근 방문 20건 -->
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;margin-bottom:14px;">
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:10px;font-weight:700;">🕐 최근 방문 20건</div>
+          <div id="stat-recent-visits" style="font-size:12px;color:rgba(255,255,255,0.7);max-height:180px;overflow-y:auto;"></div>
+        </div>
+
+        <button onclick="resetStats()" style="width:100%;padding:10px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:10px;color:rgba(239,68,68,0.6);font-size:11px;cursor:pointer;">통계 초기화 (DB 직접 삭제 필요)</button>
       </div>
     </div>
   </div>
@@ -1806,90 +1840,172 @@
       }
     }
 
-    // 통계 데이터 렌더링 (서버 응답 기반)
+    // ─── 유입경로 라벨/아이콘 ───
+    const REF_LABELS = {
+      daangn:    { icon: '🥕', name: '당근마켓',  color: '#FF6F0F' },
+      naver:     { icon: '🟢', name: '네이버',    color: '#03C75A' },
+      google:    { icon: '🔵', name: '구글',      color: '#4285F4' },
+      kakao:     { icon: '🟡', name: '카카오',    color: '#FAE100' },
+      instagram: { icon: '💜', name: '인스타그램', color: '#C13584' },
+      facebook:  { icon: '🔷', name: '페이스북',  color: '#1877F2' },
+      youtube:   { icon: '🔴', name: '유튜브',    color: '#FF0000' },
+      direct:    { icon: '⚪', name: '직접 접속', color: '#aaa' },
+      other:     { icon: '🔗', name: '기타',      color: '#888' },
+    }
+    const DEV_LABELS  = { mobile:'📱 모바일', desktop:'🖥️ PC', tablet:'📟 태블릿', unknown:'❓ 기타' }
+    const LOC_LABELS  = { hero:'🔝 상단', contact:'📋 문의', footer:'📌 푸터', floating:'📞 플로팅', header:'🔗 헤더', unknown:'❓ 기타' }
+
+    // ─── 달력 히트맵 렌더링 ───
+    function renderHeatmap(containerId, data, colorFn) {
+      const el = document.getElementById(containerId)
+      if (!el) return
+      // 최근 30일 날짜 배열 생성
+      const today = new Date()
+      const days = []
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date(today)
+        d.setDate(d.getDate() - i)
+        days.push(d.toISOString().slice(0, 10))
+      }
+      // day → count 맵
+      const map = {}
+      ;(data || []).forEach(r => { map[r.day] = r.count })
+      const maxVal = Math.max(...Object.values(map), 1)
+
+      el.innerHTML = days.map(day => {
+        const cnt = map[day] || 0
+        const ratio = cnt / maxVal
+        const bg = colorFn(ratio, cnt)
+        const label = day.slice(5) // MM-DD
+        const dayNum = new Date(day).getDate()
+        return `<div title="${day}: ${cnt}건" style="
+          width:28px;height:28px;border-radius:5px;
+          background:${bg};
+          display:flex;align-items:center;justify-content:center;
+          font-size:9px;color:${cnt>0?'rgba(255,255,255,0.8)':'rgba(255,255,255,0.2)'};
+          cursor:default;font-weight:${cnt>0?'700':'400'};
+          border:1px solid rgba(255,255,255,0.06);
+          position:relative;
+        ">${dayNum}</div>`
+      }).join('')
+    }
+
+    // ─── 유입경로 바 렌더링 ───
+    function renderReferrer(elId, data, barColor) {
+      const el = document.getElementById(elId)
+      if (!el) return
+      if (!data || data.length === 0) {
+        el.innerHTML = '<div style="color:rgba(255,255,255,0.25);font-size:12px;">데이터 없음</div>'
+        return
+      }
+      const total = data.reduce((s, r) => s + parseInt(r.count), 0)
+      el.innerHTML = data.map(r => {
+        const info = REF_LABELS[r.referrer_type] || REF_LABELS.other
+        const cnt = parseInt(r.count)
+        const pct = total > 0 ? Math.round(cnt / total * 100) : 0
+        return `<div style="margin-bottom:8px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+            <span style="font-size:12px;">${info.icon} ${info.name}</span>
+            <span style="font-size:12px;color:${barColor};font-weight:700;">${cnt}회 <span style="color:rgba(255,255,255,0.35);font-weight:400;">(${pct}%)</span></span>
+          </div>
+          <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.08);">
+            <div style="height:4px;border-radius:2px;background:${info.color};width:${pct}%;transition:width 0.6s;"></div>
+          </div>
+        </div>`
+      }).join('')
+    }
+
+    // ─── 통계 데이터 렌더링 ───
     function renderAdminStats(d) {
       document.getElementById('admin-login').style.display = 'none'
       document.getElementById('admin-stats').style.display = 'block'
 
-      // 기본 수치
+      // 4박스 수치
       document.getElementById('stat-total-visits').textContent = (d.totalVisits || 0).toLocaleString()
       document.getElementById('stat-today-visits').textContent = (d.todayVisits || 0).toLocaleString()
       document.getElementById('stat-total-clicks').textContent = (d.totalClicks || 0).toLocaleString()
       document.getElementById('stat-today-clicks').textContent = (d.todayClicks || 0).toLocaleString()
 
-      // 기기별 통계
-      const deviceEl = document.getElementById('stat-device')
-      if (deviceEl) {
+      // 달력 히트맵 - 전화 클릭 (주황)
+      renderHeatmap('stat-click-calendar', d.dailyClicks,
+        (ratio, cnt) => cnt === 0
+          ? 'rgba(255,255,255,0.04)'
+          : `rgba(245,158,11,${0.2 + ratio * 0.8})`
+      )
+
+      // 달력 히트맵 - 방문자 (파랑)
+      renderHeatmap('stat-visit-calendar', d.dailyVisits,
+        (ratio, cnt) => cnt === 0
+          ? 'rgba(255,255,255,0.04)'
+          : `rgba(0,194,255,${0.2 + ratio * 0.8})`
+      )
+
+      // 방문 유입경로
+      renderReferrer('stat-visit-referrer', d.visitReferrerStats, '#00C2FF')
+
+      // 클릭 유입경로 (어디서 보고 전화했는지)
+      renderReferrer('stat-click-referrer', d.clickReferrerStats, '#F59E0B')
+
+      // 기기별
+      const devEl = document.getElementById('stat-device')
+      if (devEl) {
         const dev = d.deviceStats || []
-        const devLabels = { mobile: '📱 모바일', desktop: '🖥️ PC', tablet: '📟 태블릿' }
-        deviceEl.innerHTML = dev.length
-          ? dev.map(r => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-              <span>${devLabels[r.device_type] || r.device_type}</span>
-              <strong style="color:#00C2FF">${parseInt(r.count).toLocaleString()}회</strong>
+        devEl.innerHTML = dev.length
+          ? dev.map(r => `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+              <span>${DEV_LABELS[r.device_type] || r.device_type}</span>
+              <strong style="color:#00C2FF">${r.count}회</strong>
             </div>`).join('')
-          : '<div style="color:rgba(255,255,255,0.3);font-size:13px;">데이터 없음</div>'
+          : '<div style="color:rgba(255,255,255,0.25);">데이터 없음</div>'
       }
 
-      // 유입경로 TOP5
-      const refEl = document.getElementById('stat-referrer')
-      if (refEl) {
-        const refs = d.referrerStats || []
-        const refLabels = { naver:'🟢 네이버', google:'🔵 구글', kakao:'🟡 카카오', direct:'⚪ 직접입력', other:'🔗 기타' }
-        refEl.innerHTML = refs.length
-          ? refs.map(r => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-              <span>${refLabels[r.referrer_type] || r.referrer_type || '기타'}</span>
-              <strong style="color:#00C2FF">${parseInt(r.count).toLocaleString()}회</strong>
-            </div>`).join('')
-          : '<div style="color:rgba(255,255,255,0.3);font-size:13px;">데이터 없음</div>'
-      }
-
-      // 클릭 위치별 통계
+      // 클릭 위치별
       const locEl = document.getElementById('stat-click-location')
       if (locEl) {
         const locs = d.clickLocationStats || []
-        const locLabels = { hero:'🔝 상단버튼', contact:'📋 문의섹션', footer:'📌 푸터', floating:'📞 플로팅버튼', header:'🔗 헤더버튼' }
         locEl.innerHTML = locs.length
-          ? locs.map(r => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-              <span>${locLabels[r.location] || r.location || '기타'}</span>
-              <strong style="color:#F59E0B">${parseInt(r.count).toLocaleString()}회</strong>
+          ? locs.map(r => `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+              <span>${LOC_LABELS[r.location] || r.location}</span>
+              <strong style="color:#F59E0B">${r.count}회</strong>
             </div>`).join('')
-          : '<div style="color:rgba(255,255,255,0.3);font-size:13px;">클릭 기록 없음</div>'
+          : '<div style="color:rgba(255,255,255,0.25);">데이터 없음</div>'
       }
 
-      // 최근 방문 20건
-      const recentVisitEl = document.getElementById('stat-recent-visits')
-      if (recentVisitEl) {
-        const rv = d.recentVisits || []
-        recentVisitEl.innerHTML = rv.length
-          ? rv.map((r, i) => {
-              const dt = new Date(r.visited_at)
-              const ts = dt.toLocaleDateString('ko-KR') + ' ' + dt.toLocaleTimeString('ko-KR', {hour:'2-digit',minute:'2-digit'})
-              const devIcon = r.device_type === 'mobile' ? '📱' : r.device_type === 'tablet' ? '📟' : '🖥️'
-              return `<div style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;">
-                <span style="color:rgba(255,255,255,0.4)">${i+1}.</span>
-                ${devIcon} ${ts}
-                ${r.referrer_type ? `<span style="color:#00C2FF;margin-left:6px;">[${r.referrer_type}]</span>` : ''}
-              </div>`
-            }).join('')
-          : '<div style="color:rgba(255,255,255,0.3);font-size:13px;">방문 기록 없음</div>'
-      }
-
-      // 최근 클릭 20건
-      const recentClickEl = document.getElementById('stat-recent-clicks')
-      if (recentClickEl) {
+      // 최근 클릭 20건 (유입경로 포함)
+      const rcEl = document.getElementById('stat-recent-clicks')
+      if (rcEl) {
         const rc = d.recentClicks || []
-        const locLabels2 = { hero:'상단버튼', contact:'문의섹션', footer:'푸터', floating:'플로팅', header:'헤더' }
-        recentClickEl.innerHTML = rc.length
+        rcEl.innerHTML = rc.length
           ? rc.map((r, i) => {
               const dt = new Date(r.clicked_at)
-              const ts = dt.toLocaleDateString('ko-KR') + ' ' + dt.toLocaleTimeString('ko-KR', {hour:'2-digit',minute:'2-digit'})
-              return `<div style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;">
-                <span style="color:rgba(255,255,255,0.4)">${i+1}.</span>
-                📞 ${ts}
-                <span style="color:#F59E0B;margin-left:6px;">[${locLabels2[r.location] || r.location || ''}]</span>
+              const ts = dt.toLocaleDateString('ko-KR',{month:'2-digit',day:'2-digit'}) + ' ' + dt.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})
+              const ref = REF_LABELS[r.referrer_type] || REF_LABELS.other
+              return `<div style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+                <span style="color:rgba(255,255,255,0.35)">${i+1}.</span>
+                📞 <span style="color:#fff">${ts}</span>
+                <span style="color:#F59E0B;margin-left:4px;">[${LOC_LABELS[r.location]||r.location}]</span>
+                <span style="margin-left:4px;">${ref.icon}</span><span style="font-size:10px;color:rgba(255,255,255,0.4);"> ${ref.name}</span>
               </div>`
             }).join('')
-          : '<div style="color:rgba(255,255,255,0.3);font-size:13px;">클릭 기록 없음</div>'
+          : '<div style="color:rgba(255,255,255,0.25);">기록 없음</div>'
+      }
+
+      // 최근 방문 20건 (유입경로 포함)
+      const rvEl = document.getElementById('stat-recent-visits')
+      if (rvEl) {
+        const rv = d.recentVisits || []
+        rvEl.innerHTML = rv.length
+          ? rv.map((r, i) => {
+              const dt = new Date(r.visited_at)
+              const ts = dt.toLocaleDateString('ko-KR',{month:'2-digit',day:'2-digit'}) + ' ' + dt.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})
+              const ref = REF_LABELS[r.referrer_type] || REF_LABELS.other
+              const dev = r.device_type === 'mobile' ? '📱' : r.device_type === 'tablet' ? '📟' : '🖥️'
+              return `<div style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+                <span style="color:rgba(255,255,255,0.35)">${i+1}.</span>
+                ${dev} <span style="color:#fff">${ts}</span>
+                <span style="margin-left:4px;">${ref.icon}</span><span style="font-size:10px;color:rgba(255,255,255,0.4);"> ${ref.name}</span>
+              </div>`
+            }).join('')
+          : '<div style="color:rgba(255,255,255,0.25);">기록 없음</div>'
       }
     }
 
