@@ -96,4 +96,28 @@ app.get('/area', (c) => {
   return c.html(html)
 })
 
+// sitemap.xml 자동 생성
+app.get('/sitemap.xml', (c) => {
+  const BASE = 'https://www.airconhelper.co.kr'
+  const today = new Date().toISOString().split('T')[0]
+
+  const urls = [
+    { loc: BASE, priority: '1.0', changefreq: 'weekly' },
+    { loc: `${BASE}/area`, priority: '0.8', changefreq: 'monthly' },
+    ...AREAS.map(a => ({ loc: `${BASE}/area/${a.slug}`, priority: '0.9', changefreq: 'monthly' })),
+  ]
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls.map(u => `  <url>
+    <loc>${u.loc}</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>${u.changefreq}</changefreq>
+    <priority>${u.priority}</priority>
+  </url>`).join('\n')}
+</urlset>`
+
+  return c.text(xml, 200, { 'Content-Type': 'application/xml; charset=utf-8' })
+})
+
 export default app
