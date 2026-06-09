@@ -96,6 +96,11 @@ app.get('/area', (c) => {
   return c.html(html)
 })
 
+// 네이버 HTML 인증 파일
+app.get('/navercc5f5865627c5427ec07847cbb871262.html', (c) => {
+  return c.text('naver-site-verification: navercc5f5865627c5427ec07847cbb871262.html')
+})
+
 // sitemap.xml 자동 생성
 app.get('/sitemap.xml', (c) => {
   const BASE = 'https://www.airconhelper.co.kr'
