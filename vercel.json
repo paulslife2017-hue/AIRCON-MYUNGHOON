@@ -24,6 +24,10 @@
       "dest": "/api/contact.js"
     },
     {
+      "src": "/area/([^/]+)",
+      "dest": "/public/area/$1.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "/public/index.html"
     }
