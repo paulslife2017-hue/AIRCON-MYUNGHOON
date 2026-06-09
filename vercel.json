@@ -24,6 +24,14 @@
       "dest": "/api/contact.js"
     },
     {
+      "src": "/sitemap.xml",
+      "dest": "/public/sitemap.xml"
+    },
+    {
+      "src": "/navercc5f5865627c5427ec07847cbb871262.html",
+      "dest": "/public/navercc5f5865627c5427ec07847cbb871262.html"
+    },
+    {
       "src": "/area/([^/]+)",
       "dest": "/public/area/$1.html"
     },
