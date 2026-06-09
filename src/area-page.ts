@@ -11,6 +11,45 @@ const KW = {
   clean:  { label: '냉매충전',      h1sub: '냉매부족·냉방약화 즉시 해결',  priceRows: [['R410A 냉매충전','6만원~'],['R22 냉매충전','5만원~'],['냉매 누설 확인','포함'],['충전 후 테스트','포함']] },
 }
 
+// 키워드별 FAQ
+const FAQ: Record<string, {q:string, a:string}[]> = {
+  repair: [
+    { q: '에어컨 수리 비용이 얼마나 되나요?', a: '에어컨 수리 비용은 고장 원인과 기종에 따라 다릅니다. 가스충전은 6만원~, 전기부품 교체는 현장 진단 후 안내드립니다. 방문 전 전화 상담으로 예상 비용을 먼저 확인하실 수 있습니다.' },
+    { q: '당일 출장이 가능한가요?', a: '네, 가능합니다. 오전 접수 시 당일 방문을 원칙으로 하며, 전화 상담 후 일정을 조율해 드립니다. 에어컨 고장은 더운 여름에 급하게 발생하는 만큼 최대한 빠르게 출장드립니다.' },
+    { q: '에어컨에서 찬바람이 안 나오는 이유가 뭔가요?', a: '찬바람이 약하거나 안 나오는 주요 원인은 냉매(가스) 부족, 필터 오염, 실외기 이상, 컴프레셔 문제 등입니다. 정확한 원인은 현장 점검 후 파악되며, 단순 가스충전만으로 해결되지 않는 경우도 있어 진단이 중요합니다.' },
+    { q: '수리 후 A/S는 되나요?', a: '네, 작업 완료 후 이상이 생기면 재방문하여 확인해 드립니다. 동일 증상 재발 시 추가 비용 없이 점검해 드리는 것을 원칙으로 합니다.' },
+    { q: '시스템에어컨도 수리 가능한가요?', a: '네, 가능합니다. 벽걸이·스탠드형은 물론 천장형 시스템에어컨, 4방향 카세트형 등 모든 기종 수리가 가능합니다. 시스템에어컨은 구조가 복잡해 전문 장비가 필요하며, 에어컨해결사는 전문 기사가 직접 방문합니다.' },
+  ],
+  gas: [
+    { q: '에어컨 가스충전이 필요한 증상이 뭔가요?', a: '찬바람이 약해지거나 미지근한 바람이 나올 때, 실외기가 계속 돌아가는데 냉방이 안 될 때, 배관에 얼음이 맺힐 때 가스 부족을 의심할 수 있습니다. 단, 정상적인 에어컨은 냉매가 자연 감소하지 않으므로 누설 여부도 함께 점검하는 것이 중요합니다.' },
+    { q: '가스충전만 하면 해결되나요?', a: '냉매 누설이 없는 경우라면 충전만으로 해결됩니다. 하지만 배관이나 실내외기 연결부에서 누설이 있다면 충전 후에도 금방 다시 부족해집니다. 에어컨해결사는 충전 전 누설 여부를 먼저 확인하고 근본 원인을 해결합니다.' },
+    { q: '가스충전 비용이 얼마나 드나요?', a: 'R410A 냉매 기준 6만원~, R22 냉매 기준 5만원~입니다. 누설 수리가 필요한 경우 추가 비용이 발생할 수 있으며, 방문 전 전화로 상담해 드립니다.' },
+    { q: '가스충전 후 얼마나 효과가 지속되나요?', a: '누설 없이 정상 충전된 경우 반영구적으로 유지됩니다. 1~2년 내 다시 부족해진다면 미세 누설이 있을 가능성이 높으므로 누설 점검을 권장합니다.' },
+    { q: '어떤 냉매를 사용하나요?', a: '기종에 따라 R410A 또는 R22 냉매를 사용합니다. 최신 에어컨 대부분은 R410A를 사용하며, 구형 기종은 R22를 사용합니다. 기종 확인 후 맞는 냉매로 충전해 드립니다.' },
+  ],
+  check: [
+    { q: '에어컨 점검은 언제 받는 게 좋나요?', a: '여름 성수기 전인 5~6월에 미리 점검받는 것을 권장합니다. 냉방 성능 저하, 이상 소음, 물 떨어짐 등의 증상이 있을 때도 즉시 점검이 필요합니다. 성수기에는 수리 일정이 밀리기 때문에 미리 점검하시면 좋습니다.' },
+    { q: '점검 비용이 따로 있나요?', a: '현장 점검 후 안내드립니다. 단순 점검 후 이상이 없으면 출장비만 발생하며, 수리가 필요한 경우 작업 전 비용을 먼저 안내드리고 동의 후 진행합니다.' },
+    { q: '에어컨 점검 시 무엇을 확인하나요?', a: '냉매 압력, 전기·배선 상태, 필터 오염도, 실외기 작동 상태, 드레인 배수 상태, 이상 소음 여부 등을 종합적으로 점검합니다. 점검 결과를 현장에서 바로 설명드립니다.' },
+    { q: '에어컨에서 이상한 냄새가 나는데 점검이 필요한가요?', a: '네, 필요합니다. 곰팡이 냄새는 내부 오염, 탄 냄새는 전기 부품 이상, 냉매 냄새는 가스 누설 가능성이 있습니다. 특히 탄 냄새는 즉시 전원을 끄고 점검을 받으시는 것이 안전합니다.' },
+    { q: '에어컨 소음이 심해졌는데 어떻게 해야 하나요?', a: '딸깍 소리는 부품 접촉 문제, 윙윙 소리는 팬 모터 이상, 쿵쿵 소리는 컴프레셔 문제일 수 있습니다. 소음 방치 시 추가 고장으로 이어질 수 있어 조기 점검을 권장합니다.' },
+  ],
+  clean: [
+    { q: '냉매충전과 가스충전은 같은 건가요?', a: '네, 같습니다. 에어컨에 사용되는 냉매를 일반적으로 "가스"라고도 부릅니다. R410A, R22 등이 대표적인 냉매(가스)이며, 냉매가 부족하면 냉방 성능이 크게 저하됩니다.' },
+    { q: '냉매가 부족하면 어떤 증상이 나타나나요?', a: '찬바람이 약해지거나 미지근한 바람이 나옵니다. 실외기는 계속 돌아가는데 실내가 시원해지지 않고, 전기요금이 늘어나는 경우도 있습니다. 배관에 성에나 얼음이 맺히기도 합니다.' },
+    { q: '냉매충전 비용이 얼마인가요?', a: 'R410A 기준 6만원~, R22 기준 5만원~입니다. 기종과 냉매 종류에 따라 다르며, 누설이 있는 경우 수리 비용이 추가될 수 있습니다. 방문 전 전화로 먼저 상담해 드립니다.' },
+    { q: '냉매는 얼마나 자주 충전해야 하나요?', a: '정상적인 에어컨은 냉매를 반영구적으로 사용합니다. 자꾸 부족해진다면 배관이나 연결부에서 누설이 발생하고 있을 가능성이 높습니다. 단순 충전만 반복하기보다 누설 원인을 찾아 해결하는 것이 중요합니다.' },
+    { q: '냉매충전 후 바로 효과가 나타나나요?', a: '네, 충전 완료 후 즉시 냉방 성능이 회복됩니다. 충전 후 현장에서 냉방 테스트를 통해 정상 작동 여부를 확인하고 마무리합니다.' },
+  ],
+  cleanSvc: [
+    { q: '에어컨 청소는 얼마나 자주 해야 하나요?', a: '필터 청소는 2~4주마다, 내부 분해세척은 1~2년에 한 번 권장합니다. 시스템에어컨은 사용 빈도와 환경에 따라 다르지만 연 1회 이상 청소를 권장합니다.' },
+    { q: '에어컨 청소 비용이 얼마나 되나요?', a: '벽걸이 분해청소 6만원~, 스탠드 분해청소 8만원~, 시스템에어컨 1대 10만원~입니다. 기종과 오염 정도에 따라 달라질 수 있으며 방문 전 전화 상담이 가능합니다.' },
+    { q: '청소 후 냄새가 없어지나요?', a: '네, 대부분 없어집니다. 곰팡이·세균에 의한 냄새는 분해세척 후 크게 개선됩니다. 다만 오염이 심한 경우 2회 청소가 필요할 수 있습니다.' },
+    { q: '시스템에어컨 청소도 가능한가요?', a: '네, 가능합니다. 천장형·4방향 카세트형 시스템에어컨 분해청소를 전문으로 합니다. 일반 에어컨보다 구조가 복잡해 전문 장비와 기술이 필요하며, 에어컨해결사 전문 기사가 직접 방문합니다.' },
+    { q: '청소 시간이 얼마나 걸리나요?', a: '벽걸이 기준 약 1~1.5시간, 스탠드 약 1.5~2시간, 시스템에어컨은 1대당 약 1.5~2시간 소요됩니다. 오염 정도에 따라 달라질 수 있습니다.' },
+  ],
+}
+
 export function renderAreaPage(area: AreaData): string {
   const kw = KW[area.keyword]
   const canonicalUrl = `${BASE_URL}/area/${area.slug}`
@@ -20,6 +59,16 @@ export function renderAreaPage(area: AreaData): string {
     : `${area.name} 에어컨 청소 전문 에어컨해결사. 분해세척·시스템에어컨·천장형 당일 출장. ${area.dongs.join('·')} 전 지역 방문 청소.`
   const dongsText = area.dongs.join(' · ')
   const isClean = area.service === 'clean'
+  const faqs = isClean ? FAQ.cleanSvc : FAQ[area.keyword]
+  const faqJsonLd = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(f => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": { "@type": "Answer", "text": f.a }
+    }))
+  })
 
   const priceRows = isClean
     ? [['벽걸이 분해청소','6만원~'],['스탠드 분해청소','8만원~'],['시스템에어컨 1대','10만원~'],['천장형 카세트','현장 안내']]
@@ -55,6 +104,7 @@ export function renderAreaPage(area: AreaData): string {
   <meta name="twitter:title" content="${title}"/>
   <meta name="twitter:description" content="${desc}"/>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","@id":"${BASE_URL}/#localbusiness","name":"에어컨해결사","url":"${BASE_URL}","telephone":"${PHONE}","description":"${desc}","priceRange":"$$","openingHours":"Mo-Su 08:00-21:00","areaServed":"${area.name}","geo":{"@type":"GeoCoordinates","latitude":${area.lat},"longitude":${area.lng}},"sameAs":[]}</script>
+  <script type="application/ld+json">${faqJsonLd}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"${BASE_URL}"},{"@type":"ListItem","position":2,"name":"서비스 지역","item":"${BASE_URL}/area"},{"@type":"ListItem","position":3,"name":"${area.shortName} ${kw.label}","item":"${canonicalUrl}"}]}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;800&display=swap" rel="stylesheet"/>
@@ -94,6 +144,13 @@ export function renderAreaPage(area: AreaData): string {
     .note{font-size:11px;color:var(--sub);margin-top:8px}
     .dong-wrap{display:flex;flex-wrap:wrap;gap:8px}
     .dong{background:#E8F0FF;color:var(--p);padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600}
+    .faq-list{display:flex;flex-direction:column;gap:10px}
+    .faq-item{background:#fff;border-radius:var(--r);border:1px solid #EEF2FF;overflow:hidden}
+    .faq-q{width:100%;text-align:left;padding:18px 20px;font-size:15px;font-weight:700;color:#1A1F35;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .faq-q i{color:var(--p);font-size:13px;flex-shrink:0;transition:transform .3s}
+    .faq-item.open .faq-q i{transform:rotate(180deg)}
+    .faq-a{display:none;padding:0 20px 18px;font-size:14px;color:var(--sub);line-height:1.8;border-top:1px solid #EEF2FF}
+    .faq-item.open .faq-a{display:block}
     .cta2{background:linear-gradient(135deg,var(--dark),#0d1f4a);padding:52px 20px;text-align:center}
     .cta2 h2{font-size:clamp(20px,4vw,30px);font-weight:800;color:#fff;margin-bottom:8px}
     .cta2 p{color:rgba(255,255,255,.55);font-size:14px;margin-bottom:24px}
@@ -154,6 +211,18 @@ export function renderAreaPage(area: AreaData): string {
       ${area.dongs.map(d => `<span class="dong">${d}</span>`).join('')}
       <span class="dong">${area.shortName} 전 지역</span>
     </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <h2 class="sec-title"><i class="fas fa-question-circle"></i>${area.shortName} ${kw.label} 자주 묻는 질문</h2>
+  <div class="faq-list">
+    ${faqs.map((f,i) => `<div class="faq-item${i===0?' open':''}">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+        ${f.q}<i class="fas fa-chevron-down"></i>
+      </button>
+      <div class="faq-a">${f.a}</div>
+    </div>`).join('')}
   </div>
 </div>
 
