@@ -28,6 +28,10 @@
       "dest": "/public/robots.txt"
     },
     {
+      "src": "/og-image.jpg",
+      "dest": "/public/og-image.jpg"
+    },
+    {
       "src": "/sitemap.xml",
       "dest": "/public/sitemap.xml"
     },
