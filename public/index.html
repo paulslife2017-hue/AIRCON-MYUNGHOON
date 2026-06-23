@@ -1280,6 +1280,139 @@
       border-top: 1px solid #EEF2FF;
     }
     .mfaq-item.open .mfaq-a { display: block; }
+
+    /* ─── GALLERY ─── */
+    #gallery {
+      background: #F7F9FF;
+      padding: 100px 24px;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 0;
+    }
+    .gallery-item {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      cursor: pointer;
+      background: #e2e8f0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .gallery-item:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(0,87,255,0.18);
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .gallery-item:hover img {
+      transform: scale(1.06);
+    }
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,10,40,0.75) 0%, transparent 55%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      display: flex;
+      align-items: flex-end;
+      padding: 20px 16px;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-caption {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    .gallery-caption i {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 4px;
+      color: var(--accent);
+    }
+
+    /* 라이트박스 */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .lightbox.active { display: flex; }
+    .lightbox-img {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 12px;
+      object-fit: contain;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+    }
+    .lightbox-close {
+      position: fixed;
+      top: 20px; right: 24px;
+      background: rgba(255,255,255,0.12);
+      border: none;
+      color: #fff;
+      font-size: 28px;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+      line-height: 1;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,0.25); }
+    .lightbox-nav {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.12);
+      border: none;
+      color: #fff;
+      font-size: 22px;
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .lightbox-nav:hover { background: rgba(255,255,255,0.25); }
+    .lightbox-prev { left: 16px; }
+    .lightbox-next { right: 16px; }
+    .lightbox-info {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.8);
+      font-size: 13px;
+      text-align: center;
+      background: rgba(0,0,0,0.4);
+      padding: 8px 20px;
+      border-radius: 30px;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 900px) {
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      #gallery { padding: 72px 20px; }
+    }
+    @media (max-width: 480px) {
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .gallery-item { aspect-ratio: 1/1; }
+    }
   </style>
 </head>
 <body>
@@ -1298,6 +1431,7 @@
         <a href="#services">서비스</a>
         <a href="#process">진행과정</a>
         <a href="#pricing">요금안내</a>
+        <a href="#gallery">작업사진</a>
         <a href="#reviews">후기</a>
         <a href="#faq">FAQ</a>
         <a href="#contact">문의</a>
@@ -1315,6 +1449,7 @@
     <a href="#services" onclick="toggleMenu()"><i class="fas fa-tools"></i> 서비스 안내</a>
     <a href="#process" onclick="toggleMenu()"><i class="fas fa-route"></i> 진행 과정</a>
     <a href="#pricing" onclick="toggleMenu()"><i class="fas fa-tag"></i> 요금 안내</a>
+    <a href="#gallery" onclick="toggleMenu()"><i class="fas fa-images"></i> 작업 사진</a>
     <a href="#reviews" onclick="toggleMenu()"><i class="fas fa-star"></i> 고객 후기</a>
     <a href="#faq" onclick="toggleMenu()"><i class="fas fa-question-circle"></i> FAQ</a>
     <a href="#contact" onclick="toggleMenu()"><i class="fas fa-envelope"></i> 문의하기</a>
@@ -1558,6 +1693,100 @@
       </div>
     </div>
   </section>
+
+  <!-- GALLERY -->
+  <section id="gallery">
+    <div class="section-inner">
+      <div class="section-head">
+        <div class="section-label"><i class="fas fa-images"></i> 실제 작업 현장</div>
+        <h2 class="section-title">직접 촬영한<br>가스충전 · 냉매 작업 현장</h2>
+        <p class="section-desc">전문 장비로 꼼꼼하게 진행합니다. 클릭하면 크게 볼 수 있습니다.</p>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item" onclick="openLightbox(0)">
+          <img src="/gallery/work-01-manifold-gauge-hose.jpg" alt="매니폴드 게이지와 냉매 호스 연결 작업" loading="lazy" />
+          <div class="gallery-overlay">
+            <div class="gallery-caption">
+              <i class="fas fa-plug"></i>
+              냉매 호스 & 게이지 연결
+            </div>
+          </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(1)">
+          <img src="/gallery/work-02-bbt-gauge-closeup.jpg" alt="BBT 매니폴드 게이지 압력 측정 클로즈업" loading="lazy" />
+          <div class="gallery-overlay">
+            <div class="gallery-caption">
+              <i class="fas fa-tachometer-alt"></i>
+              고압/저압 게이지 압력 측정
+            </div>
+          </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(2)">
+          <img src="/gallery/work-03-samsung-410a-charging.jpg" alt="삼성 실외기 R-410A 냉매 충전 작업" loading="lazy" />
+          <div class="gallery-overlay">
+            <div class="gallery-caption">
+              <i class="fas fa-wind"></i>
+              삼성 실외기 R-410A 가스충전
+            </div>
+          </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(3)">
+          <img src="/gallery/work-04-valve-connection.jpg" alt="실외기 서비스 밸브 냉매 주입 연결 작업" loading="lazy" />
+          <div class="gallery-overlay">
+            <div class="gallery-caption">
+              <i class="fas fa-tools"></i>
+              서비스 밸브 냉매 연결 작업
+            </div>
+          </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(4)">
+          <img src="/gallery/work-05-thermometer-minus30.jpg" alt="적외선 온도계 -30도 측정 냉방 성능 확인" loading="lazy" />
+          <div class="gallery-overlay">
+            <div class="gallery-caption">
+              <i class="fas fa-thermometer-empty"></i>
+              충전 후 -30°C 냉방 성능 확인
+            </div>
+          </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(5)">
+          <img src="/gallery/work-06-lg-outdoor-r22.jpg" alt="LG 실외기 R-22 냉매 충전 작업 현장" loading="lazy" />
+          <div class="gallery-overlay">
+            <div class="gallery-caption">
+              <i class="fas fa-snowflake"></i>
+              LG 실외기 R-22 냉매 충전
+            </div>
+          </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(6)">
+          <img src="/gallery/work-07-lg-samsung-outdoor.jpg" alt="LG·삼성 실외기 동시 냉매 충전 현장" loading="lazy" />
+          <div class="gallery-overlay">
+            <div class="gallery-caption">
+              <i class="fas fa-layer-group"></i>
+              LG·삼성 실외기 동시 가스충전
+            </div>
+          </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(7)">
+          <img src="/gallery/work-08-pink-tank-gauge.jpg" alt="냉매 탱크와 매니폴드 게이지 옥상 작업" loading="lazy" />
+          <div class="gallery-overlay">
+            <div class="gallery-caption">
+              <i class="fas fa-compress-arrows-alt"></i>
+              냉매 탱크 & 게이지 옥상 작업
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 라이트박스 -->
+  <div class="lightbox" id="lightbox" onclick="closeLightboxOutside(event)">
+    <button class="lightbox-close" onclick="closeLightbox()">&#10005;</button>
+    <button class="lightbox-nav lightbox-prev" onclick="changeLightbox(-1)">&#8249;</button>
+    <img class="lightbox-img" id="lightbox-img" src="" alt="" />
+    <button class="lightbox-nav lightbox-next" onclick="changeLightbox(1)">&#8250;</button>
+    <div class="lightbox-info" id="lightbox-info"></div>
+  </div>
 
   <!-- REVIEWS -->
   <section id="reviews">
@@ -1895,6 +2124,52 @@
       </div>
     </div>
   </div>
+
+  <script>
+    // ─── 갤러리 라이트박스 ───
+    const galleryImages = [
+      { src: '/gallery/work-01-manifold-gauge-hose.jpg', caption: '냉매 호스 & 게이지 연결 작업' },
+      { src: '/gallery/work-02-bbt-gauge-closeup.jpg',   caption: '고압/저압 게이지 압력 측정' },
+      { src: '/gallery/work-03-samsung-410a-charging.jpg', caption: '삼성 실외기 R-410A 가스충전' },
+      { src: '/gallery/work-04-valve-connection.jpg',    caption: '서비스 밸브 냉매 연결 작업' },
+      { src: '/gallery/work-05-thermometer-minus30.jpg', caption: '충전 후 -30°C 냉방 성능 확인' },
+      { src: '/gallery/work-06-lg-outdoor-r22.jpg',      caption: 'LG 실외기 R-22 냉매 충전' },
+      { src: '/gallery/work-07-lg-samsung-outdoor.jpg',  caption: 'LG·삼성 실외기 동시 가스충전' },
+      { src: '/gallery/work-08-pink-tank-gauge.jpg',     caption: '냉매 탱크 & 게이지 옥상 작업' }
+    ];
+    let currentLightboxIdx = 0;
+
+    function openLightbox(idx) {
+      currentLightboxIdx = idx;
+      updateLightbox();
+      document.getElementById('lightbox').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    function closeLightboxOutside(e) {
+      if (e.target === document.getElementById('lightbox')) closeLightbox();
+    }
+    function changeLightbox(dir) {
+      currentLightboxIdx = (currentLightboxIdx + dir + galleryImages.length) % galleryImages.length;
+      updateLightbox();
+    }
+    function updateLightbox() {
+      const img = galleryImages[currentLightboxIdx];
+      document.getElementById('lightbox-img').src = img.src;
+      document.getElementById('lightbox-img').alt = img.caption;
+      document.getElementById('lightbox-info').textContent = img.caption + ' (' + (currentLightboxIdx + 1) + ' / ' + galleryImages.length + ')';
+    }
+    document.addEventListener('keydown', function(e) {
+      const lb = document.getElementById('lightbox');
+      if (!lb.classList.contains('active')) return;
+      if (e.key === 'ArrowRight') changeLightbox(1);
+      if (e.key === 'ArrowLeft') changeLightbox(-1);
+      if (e.key === 'Escape') closeLightbox();
+    });
+  </script>
 
   <script>
     // ═══════════════════════════════════════════
