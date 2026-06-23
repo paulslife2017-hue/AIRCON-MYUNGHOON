@@ -32,6 +32,10 @@
       "dest": "/public/og-image.jpg"
     },
     {
+      "src": "/gallery/(.*)",
+      "dest": "/public/gallery/$1"
+    },
+    {
       "src": "/sitemap.xml",
       "dest": "/public/sitemap.xml"
     },
