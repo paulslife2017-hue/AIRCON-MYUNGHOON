@@ -8,6 +8,7 @@ import pageHtml from './page.html?raw'
 const app = new Hono()
 
 app.use('/static/*', serveStatic({ root: './' }))
+app.use('/gallery/*', serveStatic({ root: './' }))
 
 // 메인 페이지
 app.get('/', (c) => {
