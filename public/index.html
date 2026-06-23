@@ -207,6 +207,20 @@
       white-space: nowrap;
     }
     .btn-call:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,87,255,0.45); }
+    .header-tel {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      text-decoration: none;
+      letter-spacing: -0.3px;
+      white-space: nowrap;
+    }
+    .header-tel i { color: #4ADE80; font-size: 13px; }
+    .header-tel:hover { color: #4ADE80; }
+    @media (max-width: 768px) { .header-tel { display: none; } }
 
     .hamburger {
       display: none;
@@ -1437,6 +1451,7 @@
         <a href="#contact">문의</a>
       </nav>
       <div class="header-cta">
+        <a href="tel:010-2343-2966" class="header-tel" onclick="trackPhoneClick('header')"><i class="fas fa-phone"></i> 010-2343-2966</a>
         <div class="hamburger" id="hamburger" onclick="toggleMenu()">
           <span></span><span></span><span></span>
         </div>
@@ -1530,7 +1545,7 @@
 
   <!-- NOTICE -->
   <div class="notice-bar">
-    <p>📢 <strong>여름 성수기 사전 예약 접수 중</strong> · 예약 시 출장비 50% 할인 · 지금 바로 문의하세요!</p>
+    <p>📢 <strong>오전 접수 시 당일 출장 가능</strong> · 서울·경기·인천·전국 출장 · 전화 한 통으로 빠르게 해결합니다</p>
   </div>
 
   <!-- SERVICES -->
