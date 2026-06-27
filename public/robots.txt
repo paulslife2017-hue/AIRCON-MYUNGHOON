@@ -3,15 +3,24 @@ Allow: /
 Disallow: /api/
 Disallow: /.wrangler/
 
-# Googlebot 전용 크롤 속도 제한 없음
+# Googlebot 전용 크롤 속도 제한 없음 (최대한 빠른 인덱싱)
 User-agent: Googlebot
 Allow: /
+Allow: /area/
 Crawl-delay: 0
 
-# Naverbot
+# Naverbot (네이버)
 User-agent: Yeti
 Allow: /
+Allow: /area/
 Crawl-delay: 1
 
-# 사이트맵
+# Bingbot
+User-agent: Bingbot
+Allow: /
+Allow: /area/
+Crawl-delay: 1
+
+# 사이트맵 (구글/네이버 모두 인식)
 Sitemap: https://www.airconhelper.co.kr/sitemap.xml
+Sitemap: https://airconhelper.co.kr/sitemap.xml
